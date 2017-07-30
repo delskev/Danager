@@ -1,8 +1,8 @@
 package be.perzival.danager.command;
 
 import be.perzival.danager.configuration.ConfigurationProperties;
+import be.perzival.danager.exceptions.command.CommandException;
 import de.btobastian.sdcf4j.Command;
-import de.btobastian.sdcf4j.CommandExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
  * Created by Perzival on 30/07/2017.
  */
 @Component
-public class Property implements CommandExecutor {
+public class Property extends AbstractCommand {
 
     @Autowired
     private ConfigurationProperties configurationProperties;
@@ -30,5 +30,15 @@ public class Property implements CommandExecutor {
         }
 
         return builder.toString(); // dummy return type
+    }
+
+    @Override
+    public String executeCommand(String[] args) throws CommandException {
+        try {
+            return this.onPropertyCommand();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return "There's an error with the command !";
     }
 }

@@ -1,12 +1,10 @@
 package be.perzival.danager;
 
 import be.perzival.danager.Callback.DanagerCallback;
-import be.perzival.danager.command.Info;
-import be.perzival.danager.command.Property;
+import be.perzival.danager.command.AbstractCommand;
 import be.perzival.danager.configuration.ConfigurationProperties;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.Javacord;
-import de.btobastian.sdcf4j.CommandExecutor;
 import de.btobastian.sdcf4j.CommandHandler;
 import de.btobastian.sdcf4j.handler.JavacordHandler;
 import org.slf4j.Logger;
@@ -27,13 +25,14 @@ public class DanagerBot {
     static final Logger LOG = LoggerFactory.getLogger(DanagerBot.class);
 
     DiscordAPI api;
+
     CommandHandler handler;
 
     @Autowired
     private ConfigurationProperties configurationProperties;
 
     @Autowired
-    Map<String,CommandExecutor> commandExecutorssMap;
+    Map<String, AbstractCommand> commandExecutorssMap;
 
     @Autowired
     private ApplicationContext appContext;
@@ -43,16 +42,19 @@ public class DanagerBot {
     }
 
     public void Connect() {
-        api = Javacord.getApi("MzQxMTgwNTQ4MDQxMTQ2MzY5.DF9UvA.MecwVYfKXf71rAC_yrXlEzcwtiY", true);; // Your api instance. Of course it should be initialized!
+        //API instance
+        api = Javacord.getApi("MzQxMTgwNTQ4MDQxMTQ2MzY5.DF9UvA.MecwVYfKXf71rAC_yrXlEzcwtiY", true);
 
         handler = new JavacordHandler(api);
         handler.setDefaultPrefix(configurationProperties.getPrefix());
-        handler.registerCommand(new Info());
-        handler.registerCommand(appContext.getBean(Property.class));
 
-        commandExecutorssMap  = BeanFactoryUtils.beansOfTypeIncludingAncestors(appContext, CommandExecutor.class, true, true);
+        commandExecutorssMap  = BeanFactoryUtils.beansOfTypeIncludingAncestors(appContext, AbstractCommand.class, true, true);
 
-        BiConsumer<String, CommandExecutor> biConsumer = (key, value) -> { LOG.info("command : "+ key + "[ADDED]"); ;handler.registerCommand(value);};
+        BiConsumer<String, AbstractCommand> biConsumer = (key, value) -> {
+            LOG.info("command : "+ key + "[ADDED]");
+            value.attachCommandHandler(handler);
+            handler.registerCommand(value);
+        };
         commandExecutorssMap.forEach(biConsumer);
 
         // connect
