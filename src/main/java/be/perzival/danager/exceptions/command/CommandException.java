@@ -5,6 +5,10 @@ import be.perzival.danager.exceptions.ExceptionsMessages;
 /**
  * Created by Perzival on 30/07/2017.
  */
+
+/**
+ * root of the command exception
+ */
 public class CommandException extends Exception {
     public CommandException () {
 

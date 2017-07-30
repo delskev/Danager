@@ -41,9 +41,12 @@ public class DanagerBot {
     public DanagerBot() {
     }
 
+    /**
+     * connect the bot to the discord
+     */
     public void Connect() {
         //API instance
-        api = Javacord.getApi("MzQxMTgwNTQ4MDQxMTQ2MzY5.DF9UvA.MecwVYfKXf71rAC_yrXlEzcwtiY", true);
+        api = Javacord.getApi("***", true);
 
         handler = new JavacordHandler(api);
         handler.setDefaultPrefix(configurationProperties.getPrefix());

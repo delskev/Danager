@@ -17,25 +17,26 @@ public class Property extends AbstractCommand {
     @Autowired
     private ConfigurationProperties configurationProperties;
 
-    @Command(aliases = {"property" }, description = "Shows bot's configuration", usage = "property")
-    public String onPropertyCommand() throws IllegalAccessException {
-        Class aClass = ConfigurationProperties.class;
-        Field[] fields = aClass.getDeclaredFields();
-
-        StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < fields.length; ++i) {
-            fields[i].setAccessible(true);
-            builder.append(fields[i].getName() + ": "+ fields[i].get(configurationProperties));
-            fields[i].setAccessible(false);
-        }
-
-        return builder.toString(); // dummy return type
-    }
-
+    /**
+     * Display all the property of the bot configuration's file
+     * @param args
+     * @return
+     * @throws CommandException throw cause of introspection
+     */
     @Override
+    @Command(aliases = {"property" }, description = "Shows bot's configuration", usage = "property")
     public String executeCommand(String[] args) throws CommandException {
         try {
-            return this.onPropertyCommand();
+            Class aClass = ConfigurationProperties.class;
+            Field[] fields = aClass.getDeclaredFields();
+
+            StringBuilder builder = new StringBuilder();
+            for(int i = 0; i < fields.length; ++i) {
+                fields[i].setAccessible(true);
+                builder.append(fields[i].getName() + ": "+ fields[i].get(configurationProperties));
+                fields[i].setAccessible(false);
+            }
+            return builder.toString(); // dummy return type
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
