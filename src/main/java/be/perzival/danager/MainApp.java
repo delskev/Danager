@@ -16,7 +16,7 @@ public class MainApp {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("SpringContext.xml");
 
         DanagerBot danagerBot = ctx.getBean(DanagerBot.class);
-        danagerBot.Connect();
+        danagerBot.Connect(args[0]);
 
     }
 }

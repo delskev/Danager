@@ -1,6 +1,9 @@
-package be.perzival.danager.command;
+package be.perzival.danager.command.utils;
 
+import be.perzival.danager.command.AbstractCommand;
 import be.perzival.danager.exceptions.command.CommandException;
+import de.btobastian.javacord.DiscordAPI;
+import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.sdcf4j.Command;
 import de.btobastian.sdcf4j.CommandHandler;
 import org.springframework.stereotype.Component;
@@ -11,7 +14,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class Help extends AbstractCommand {
 
-
     /**
      * show an helping message
      * @param args no need for this command
@@ -19,10 +21,14 @@ public class Help extends AbstractCommand {
      * @throws CommandException
      */
     @Override
-    @Command(aliases = {"help", "!commands"}, description = "Shows this page")
-    public String executeCommand(String[] args) throws CommandException {
-        this.isCommandHandlerAttached();
+    @Command(aliases = {"help", "commands"}, description = "Shows this page", usage = "!help or !commands")
+    public String executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
         StringBuilder builder = new StringBuilder();
+
+        if(isCommandHandlerAttached()) {
+            return null;
+        }
+
         builder.append("```xml"); // a xml code block looks fancy
         for (CommandHandler.SimpleCommand simpleCommand : commandHandler.getCommands()) {
             if (!simpleCommand.getCommandAnnotation().showInHelpPage()) {
@@ -44,7 +50,7 @@ public class Help extends AbstractCommand {
             }
         }
         builder.append("\n```"); // end of xml code block
+
         return builder.toString();
-        //return this.onHelpCommand();
     }
 }

@@ -44,9 +44,9 @@ public class DanagerBot {
     /**
      * connect the bot to the discord
      */
-    public void Connect() {
+    public void Connect(String apiKey) {
         //API instance
-        api = Javacord.getApi("***", true);
+        api = Javacord.getApi(apiKey, true);
 
         handler = new JavacordHandler(api);
         handler.setDefaultPrefix(configurationProperties.getPrefix());
@@ -56,6 +56,7 @@ public class DanagerBot {
         BiConsumer<String, AbstractCommand> biConsumer = (key, value) -> {
             LOG.info("command : "+ key + "[ADDED]");
             value.attachCommandHandler(handler);
+            value.attachDiscordAPI(api);
             handler.registerCommand(value);
         };
         commandExecutorssMap.forEach(biConsumer);

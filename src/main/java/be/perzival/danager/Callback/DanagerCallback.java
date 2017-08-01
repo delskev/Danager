@@ -1,5 +1,6 @@
 package be.perzival.danager.Callback;
 
+import be.perzival.danager.listener.DanagerJoinServerListener;
 import com.google.common.util.concurrent.FutureCallback;
 import de.btobastian.javacord.DiscordAPI;
 
@@ -8,11 +9,7 @@ import de.btobastian.javacord.DiscordAPI;
  */
 public class DanagerCallback implements FutureCallback<DiscordAPI> {
     public void onSuccess(DiscordAPI discordAPI) {
-//        // register listener
-//        discordAPI.registerListener(new MessageCreateListener() {
-//            public void onMessageCreate(DiscordAPI api, Message message) {
-//            }
-//        });
+        discordAPI.registerListener(new DanagerJoinServerListener());
     }
 
     public void onFailure(Throwable throwable) {
