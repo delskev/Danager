@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -46,9 +47,17 @@ public class Delete extends AbstractCommand {
                 Collection<Message> messagesSorted = messageHistory.get().getMessages();
 
                 //avoid pinned message suppression
-                messagesSorted.forEach(m -> {if(message.isPinned())messagesSorted.remove(m);});
+                Collection<Message> messages = new ArrayList<>();
+                for (Message msg : messagesSorted) {
+                    LOG.trace("message is pinned : " + msg.isPinned());
+                    if(!msg.isPinned()) {
+                        messages.add(msg);
+                    }else {
+                        LOG.trace("message is pinned");
+                    }
+                }
 
-                message.getChannelReceiver().bulkDelete(messagesSorted.toArray(new Message[messagesSorted.size()])).get();
+                message.getChannelReceiver().bulkDelete(messages.toArray(new Message[messages.size()])).get();
             }
             return "Message deleted: "+ args[0];
         } catch (InterruptedException e) {
