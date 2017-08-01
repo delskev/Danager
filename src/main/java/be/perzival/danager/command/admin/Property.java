@@ -3,7 +3,6 @@ package be.perzival.danager.command.admin;
 import be.perzival.danager.command.AbstractCommand;
 import be.perzival.danager.exceptions.command.CommandException;
 import de.btobastian.javacord.DiscordAPI;
-import de.btobastian.javacord.entities.User;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.sdcf4j.Command;
 import org.slf4j.Logger;
@@ -30,7 +29,6 @@ public class Property extends AbstractCommand {
     @Override
     @Command(aliases = {"property" }, description = "Shows bot's configuration", usage = "property", privateMessages = false)
     public String executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
-        User author = message.getAuthor();
 
         try {
             if(isOwner(api, message) || isadmin(api, message)) {

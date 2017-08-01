@@ -14,6 +14,7 @@ import de.btobastian.sdcf4j.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -108,14 +109,22 @@ public abstract class  AbstractCommand implements CommandExecutor {
      */
     protected boolean isadmin(DiscordAPI api, Message message) {
         //get roles of the message's server
-        Collection<Role> roles = getCorrectServer(api, message).getRoles();
+        Collection<Role> roles = message.getAuthor().getRoles(getCorrectServer(api, message));
         String[] adminRoles = configurationProperties.getAdmin();
 
-        for (String role : adminRoles) {
-            if( roles.contains(role)) {
-                return true;
+        Iterator itr = roles.iterator();
+
+        while(itr.hasNext()) {
+            Role element = (Role)itr.next();
+
+            for(int i = 0; i < adminRoles.length; ++i) {
+                if( adminRoles[i].toLowerCase().equals(element.getName().toLowerCase())) {
+                    return true;
+                }
             }
         }
+
+        
         return false;
     }
 
