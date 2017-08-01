@@ -108,19 +108,15 @@ public abstract class  AbstractCommand implements CommandExecutor {
         //get roles of the message's server
         Collection<Role> roles = message.getAuthor().getRoles(getCorrectServer(api, message));
         String[] adminRoles = configurationProperties.getAdmin();
-
         Iterator itr = roles.iterator();
 
-        while(itr.hasNext()) {
-            Role element = (Role)itr.next();
-
+        for(Role role: roles) {
             for(int i = 0; i < adminRoles.length; ++i) {
-                if( adminRoles[i].toLowerCase().equals(element.getName().toLowerCase())) {
+                if( adminRoles[i].toLowerCase().equals(role.getName().toLowerCase())) {
                     return true;
                 }
             }
         }
-
         
         return false;
     }
@@ -135,6 +131,17 @@ public abstract class  AbstractCommand implements CommandExecutor {
      */
     protected boolean isOwner(DiscordAPI api, Message message) throws ExecutionException, InterruptedException {
         Future<User> owner = getCorrectServer(api, message).getOwner();
+
         return owner.get().equals(message.getAuthor());
+    }
+
+    protected String correctAmountOfArgument(String[] args, int min, int max) {
+        if (args.length > max) { // more than 1 argument
+            return "To many arguments!";
+        }
+        if (args.length == 0 || args.length < min) { // more than 1 argument
+            return "You need to provide more argument !";
+        }
+        return null;
     }
 }

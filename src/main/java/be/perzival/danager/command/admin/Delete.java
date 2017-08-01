@@ -44,7 +44,11 @@ public class Delete extends AbstractCommand {
                 Future<MessageHistory> messageHistory = message.getChannelReceiver().getMessageHistory(Integer.parseInt(args[0]));
 
                 Collection<Message> messagesSorted = messageHistory.get().getMessages();
-                    message.getChannelReceiver().bulkDelete(messagesSorted.toArray(new Message[messagesSorted.size()])).get();
+
+                //avoid pinned message suppression
+                messagesSorted.forEach(m -> {if(message.isPinned())messagesSorted.remove(m);});
+
+                message.getChannelReceiver().bulkDelete(messagesSorted.toArray(new Message[messagesSorted.size()])).get();
             }
             return "Message deleted: "+ args[0];
         } catch (InterruptedException e) {
