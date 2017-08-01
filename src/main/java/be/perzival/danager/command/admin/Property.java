@@ -29,7 +29,6 @@ public class Property extends AbstractCommand {
     @Override
     @Command(aliases = {"property" }, description = "Shows bot's configuration", usage = "property", privateMessages = false)
     public String executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
-
         try {
             if(isOwner(api, message) || isadmin(api, message)) {
                 message.getAuthor().sendMessage(configurationProperties.toString());

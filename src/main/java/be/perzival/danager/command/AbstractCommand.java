@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -23,8 +22,6 @@ import java.util.concurrent.Future;
  * Created by Perzival on 30/07/2017.
  */
 public abstract class  AbstractCommand implements CommandExecutor {
-    @Autowired
-    protected Map<String, AbstractCommand> commandExecutorssMap;
 
     @Autowired
     protected ConfigurationProperties configurationProperties;

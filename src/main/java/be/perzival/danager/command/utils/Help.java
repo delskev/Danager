@@ -25,7 +25,7 @@ public class Help extends AbstractCommand {
     public String executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
         StringBuilder builder = new StringBuilder();
 
-        if(isCommandHandlerAttached()) {
+        if(!isCommandHandlerAttached()) {
             return null;
         }
 
