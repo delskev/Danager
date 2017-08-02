@@ -1,6 +1,8 @@
 package be.perzival.danager.command.admin;
 
 import be.perzival.danager.command.AbstractCommand;
+import be.perzival.danager.configuration.ConfigurationProperties;
+import be.perzival.danager.configuration.PropertiesManager;
 import be.perzival.danager.exceptions.command.CommandException;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
@@ -9,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -29,13 +32,29 @@ public class Property extends AbstractCommand {
     @Override
     @Command(aliases = {"property" }, description = "Shows bot's configuration", usage = "property", privateMessages = false)
     public String executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
+        ConfigurationProperties config = PropertiesManager.getInstance().getServerConfig(getCorrectServer(api, message));
         try {
             if(isOwner(api, message) || isadmin(api, message)) {
-                message.getAuthor().sendMessage(configurationProperties.toString());
+                if( args.length == 0) {
+                    message.getAuthor().sendMessage(config.toString());
+                }
+                //want to get or specify a property
+                if (args.length > 1 && "get".equals(args[0])) {//get case
+                    message.reply(config.getProperty(args[1]));
+                }
+                if(args.length > 2 && "set".equalsIgnoreCase(args[0])) {
+                    config.setProperty(args[1], args[2]);
+                    PropertiesManager.getInstance().persistServerConfig(getCorrectServer(api, message));
+                    message.reply(config.getProperty(args[1]));
+                }
+
             }
-        } catch (ExecutionException e) {
+        } catch (IOException e) {
+            message.reply("there's an error with setting property : "+ args[1]);
             e.printStackTrace();
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
 

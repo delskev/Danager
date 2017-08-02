@@ -7,6 +7,4 @@
     <context:component-scan base-package="be.perzival.danager"/>
     <context:annotation-config/>
 
-    <context:property-placeholder location="classpath:config.properties"/>
-
 </beans>

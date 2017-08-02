@@ -2,9 +2,9 @@ package be.perzival.danager;
 
 import be.perzival.danager.Callback.DanagerCallback;
 import be.perzival.danager.command.AbstractCommand;
-import be.perzival.danager.configuration.ConfigurationProperties;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.Javacord;
+import de.btobastian.javacord.listener.Listener;
 import de.btobastian.sdcf4j.CommandHandler;
 import de.btobastian.sdcf4j.handler.JavacordHandler;
 import org.slf4j.Logger;
@@ -29,10 +29,10 @@ public class DanagerBot {
     CommandHandler handler;
 
     @Autowired
-    private ConfigurationProperties configurationProperties;
+    Map<String, AbstractCommand> commandExecutorssMap;
 
     @Autowired
-    Map<String, AbstractCommand> commandExecutorssMap;
+    Map<String, Listener> listenerMap;
 
     @Autowired
     private ApplicationContext appContext;
@@ -49,19 +49,36 @@ public class DanagerBot {
         api = Javacord.getApi(apiKey, true);
 
         handler = new JavacordHandler(api);
-        handler.setDefaultPrefix(configurationProperties.getPrefix());
+        handler.setDefaultPrefix("!");
 
         commandExecutorssMap  = BeanFactoryUtils.beansOfTypeIncludingAncestors(appContext, AbstractCommand.class, true, true);
+        listenerMap  = BeanFactoryUtils.beansOfTypeIncludingAncestors(appContext, Listener.class, true, true);
 
+        registerCommand();
+        registerListener();
+
+        api.setGame("habiller ses doigts de pied en petit soldat");
+        // connect
+        api.connect(new DanagerCallback());
+    }
+
+    public void registerCommand() {
         BiConsumer<String, AbstractCommand> biConsumer = (key, value) -> {
             LOG.info("command : "+ key + "[ADDED]");
             value.attachCommandHandler(handler);
             value.attachDiscordAPI(api);
             handler.registerCommand(value);
         };
-        commandExecutorssMap.forEach(biConsumer);
 
-        // connect
-        api.connect(new DanagerCallback());
+        commandExecutorssMap.forEach(biConsumer);
+    }
+
+    public void registerListener() {
+        BiConsumer<String, Listener> biConsumer = (key, value) -> {
+            LOG.info("Listener : "+ key + "[ADDED]");
+            api.registerListener(value);
+        };
+
+        listenerMap.forEach(biConsumer);
     }
 }

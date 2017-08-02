@@ -1,36 +1,58 @@
 package be.perzival.danager.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Created by Perzival on 30/07/2017.
  */
 @Component
-@PropertySource("config.properties")
 public class ConfigurationProperties {
+    static final Logger LOG = LoggerFactory.getLogger(ConfigurationProperties.class);
 
-    @Value("${commands.prefix}")
-    private String prefix;
+    private Properties applicationProperties;
 
-    @Value("${roles.admin}")
-    private String[] admin;
+    public ConfigurationProperties() {
+        this.applicationProperties = null;
+    }
+
+    public ConfigurationProperties(Properties properties) {
+        this.applicationProperties = properties;
+    }
 
     public String getPrefix() {
-        return prefix;
+        return applicationProperties.get(PropertiesEnum.PREFIX.value()).toString();
     }
 
     public void setPrefix(String prefix) {
-        this.prefix = prefix;
+        applicationProperties.setProperty(PropertiesEnum.PREFIX.value(), prefix);
     }
 
     public String[] getAdmin() {
-        return admin;
+        return applicationProperties.get(PropertiesEnum.ADMIN.value()).toString().split(",");
     }
 
     public void setAdmin(String[] admin) {
-        this.admin = admin;
+        String result = "";
+        for(int i = 0; i < admin.length; ++i) {
+            result = result.concat(admin[i]);
+            if(!(i < admin.length-1)) {
+                result = result.concat(",");
+            }
+        }
+        applicationProperties.setProperty(PropertiesEnum.ADMIN.value(), result);
+    }
+
+    public Boolean getLuciole() {
+        return applicationProperties.get(PropertiesEnum.LUCIOLE.value()).toString().equalsIgnoreCase("true");
+    }
+
+    public void setLuciole(Boolean luciole) {
+        applicationProperties.setProperty(PropertiesEnum.LUCIOLE.value(), luciole.toString());
     }
 
     @Override
@@ -45,11 +67,19 @@ public class ConfigurationProperties {
         builder.append("**                                                           **\n");
         builder.append("*                                                             *\n");
         builder.append("***************************************************************\n");
-        builder.append("prefix=" + prefix+ "\n");
-        builder.append("admin=" + displayPropertyValues(admin));
+        applicationProperties.forEach((o, o2) -> builder.append(o + "=" + o2+ "\n"));
         builder.append("\n```"); // end of xml code block
 
         return builder.toString();
+    }
+
+    public final String getProperty(String key) {
+        return key  + "=" + applicationProperties.getProperty(key);
+    }
+
+    public final String setProperty(String key, String value) throws IOException {
+        LOG.debug("Setting property: "+ key );
+        return applicationProperties.setProperty(key, value).toString();
     }
 
 
@@ -62,6 +92,10 @@ public class ConfigurationProperties {
             }
         }
         return returnedValues.toString();
+    }
+
+    public final Properties getproperties() {
+        return this.applicationProperties;
     }
 
 }

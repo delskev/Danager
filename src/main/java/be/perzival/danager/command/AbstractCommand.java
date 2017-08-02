@@ -1,6 +1,6 @@
 package be.perzival.danager.command;
 
-import be.perzival.danager.configuration.ConfigurationProperties;
+import be.perzival.danager.configuration.PropertiesManager;
 import be.perzival.danager.exceptions.ExceptionsMessages;
 import be.perzival.danager.exceptions.command.CommandException;
 import be.perzival.danager.exceptions.command.CommandHandlerNotAttached;
@@ -11,7 +11,6 @@ import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.permissions.Role;
 import de.btobastian.sdcf4j.CommandExecutor;
 import de.btobastian.sdcf4j.CommandHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -22,9 +21,6 @@ import java.util.concurrent.Future;
  * Created by Perzival on 30/07/2017.
  */
 public abstract class  AbstractCommand implements CommandExecutor {
-
-    @Autowired
-    protected ConfigurationProperties configurationProperties;
 
     protected CommandHandler commandHandler = null;
     protected DiscordAPI discordAPI = null;
@@ -92,10 +88,9 @@ public abstract class  AbstractCommand implements CommandExecutor {
         return this.enabled;
     }
 
-    protected Server getCorrectServer(DiscordAPI api, Message message) {
+    public static Server getCorrectServer(DiscordAPI api, Message message) {
         //retrieve the serverId
         return message.getChannelReceiver().getServer();
-        //return api.getServerById(message.getReceiver().getId());
     }
 
     /**
@@ -107,7 +102,7 @@ public abstract class  AbstractCommand implements CommandExecutor {
     protected boolean isadmin(DiscordAPI api, Message message) {
         //get roles of the message's server
         Collection<Role> roles = message.getAuthor().getRoles(getCorrectServer(api, message));
-        String[] adminRoles = configurationProperties.getAdmin();
+        String[] adminRoles = PropertiesManager.getInstance().getServerConfig(getCorrectServer(api, message)).getAdmin();
         Iterator itr = roles.iterator();
 
         for(Role role: roles) {
