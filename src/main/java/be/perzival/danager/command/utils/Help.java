@@ -1,9 +1,11 @@
 package be.perzival.danager.command.utils;
 
 import be.perzival.danager.command.AbstractCommand;
+import be.perzival.danager.command.Responsefactory;
 import be.perzival.danager.exceptions.command.CommandException;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
+import de.btobastian.javacord.entities.message.embed.EmbedBuilder;
 import de.btobastian.sdcf4j.Command;
 import de.btobastian.sdcf4j.CommandHandler;
 import org.springframework.stereotype.Component;
@@ -23,11 +25,11 @@ public class Help extends AbstractCommand {
      */
     @Override
     @Command(aliases = {"help", "commands"}, description = "Shows this page", usage = "!help or !commands")
-    public String executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
+    public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
         StringBuilder builder = new StringBuilder();
 
         if(!isCommandHandlerAttached()) {
-            return null;
+            return ;
         }
 
         builder.append("```xml"); // a xml code block looks fancy
@@ -51,7 +53,7 @@ public class Help extends AbstractCommand {
             }
         }
         builder.append("\n```"); // end of xml code block
-
-        return builder.toString();
+        EmbedBuilder embed = Responsefactory.getEmbedResponse(this.getClass(), builder.toString());
+        message.reply(null, embed);
     }
 }

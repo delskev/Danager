@@ -1,6 +1,6 @@
 package be.perzival.danager.command;
 
-import be.perzival.danager.configuration.PropertiesManager;
+import be.perzival.danager.manager.PropertiesManager;
 import be.perzival.danager.exceptions.ExceptionsMessages;
 import be.perzival.danager.exceptions.command.CommandException;
 import be.perzival.danager.exceptions.command.CommandHandlerNotAttached;
@@ -34,7 +34,7 @@ public abstract class  AbstractCommand implements CommandExecutor {
      * @return
      * @throws CommandException
      */
-    public abstract String executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException;
+    public abstract void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException;
 
     /**
      * use to attach a command handler to the command
@@ -138,5 +138,31 @@ public abstract class  AbstractCommand implements CommandExecutor {
             return "You need to provide more argument !";
         }
         return null;
+    }
+
+    /**
+     * find a user no matter how you write it : @user | User | USER | UsEr
+     * @param users the collection of user where to find the user
+     * @param userToFind the nickname of the user to find
+     * @return
+     */
+    protected User findUser(Collection<User> users, String userToFind) {
+        //case of a mention
+        User userfinded = null;
+        if(userToFind.contains("@")) {
+            userToFind = userToFind.substring(2, userToFind.length() -1);
+            for (User user : users) {
+                if(user.getId().equals(userToFind)) {
+                    userfinded = user;
+                }
+            }
+        }else {//case of name
+            for (User user : users) {
+                if(user.getName().toLowerCase().equals(userToFind.toLowerCase())) {
+                    userfinded = user;
+                }
+            }
+        }
+        return userfinded;
     }
 }

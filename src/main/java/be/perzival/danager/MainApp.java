@@ -16,7 +16,14 @@ public class MainApp {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("SpringContext.xml");
 
         DanagerBot danagerBot = ctx.getBean(DanagerBot.class);
-        danagerBot.Connect(args[0]);
+        String api = System.getenv().get("DISCORD");
+        if (api != null) {
+            danagerBot.Connect(api);
+        }else if(args[0] != null) {
+            danagerBot.Connect(args[0]);
+        }else {
+            throw new IllegalArgumentException("There's no argument");
+        }
 
     }
 }

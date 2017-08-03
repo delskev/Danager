@@ -1,10 +1,12 @@
 package be.perzival.danager.command.admin;
 
 import be.perzival.danager.command.AbstractCommand;
+import be.perzival.danager.command.Responsefactory;
 import be.perzival.danager.exceptions.command.CommandException;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.message.MessageHistory;
+import de.btobastian.javacord.entities.message.embed.EmbedBuilder;
 import de.btobastian.sdcf4j.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,12 +35,12 @@ public class Delete extends AbstractCommand {
      */
     @Override
     @Command(aliases = {"delete" }, description = "delete message on current channel", usage = "delete [number of message] (max 100)", privateMessages = false)
-    public String executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
+    public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
         if (args.length > 1) { // more than 1 argument
-            return "To many arguments!";
+            message.reply("To many arguments!");
         }
         if (args.length == 0) { // more than 1 argument
-            return "no argument provided !";
+            message.reply("no argument provided !");
         }
         try {
             if(isOwner(api, message) || isadmin(api, message)) {
@@ -58,14 +60,14 @@ public class Delete extends AbstractCommand {
                 }
 
                 message.getChannelReceiver().bulkDelete(messages.toArray(new Message[messages.size()])).get();
+                EmbedBuilder builder = Responsefactory.getEmbedResponse(this.getClass(), "Delete "+ messages.size()+ " messages");
+                message.getChannelReceiver().sendMessage(null, builder).get();
             }
-            return "Message deleted: "+ args[0];
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
-        return null;
     }
 }

@@ -1,5 +1,7 @@
-package be.perzival.danager.configuration;
+package be.perzival.danager.manager;
 
+import be.perzival.danager.configuration.ConfigurationProperties;
+import be.perzival.danager.configuration.PropertiesEnum;
 import de.btobastian.javacord.entities.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +28,7 @@ public class PropertiesManager {
 
 
     public final static PropertiesManager getInstance() {
-        if(INSTANCE == null) {
-            INSTANCE =  new PropertiesManager();
-        }
-        return INSTANCE;
+        return INSTANCE == null ? (INSTANCE = new PropertiesManager()): INSTANCE;
     }
 
 

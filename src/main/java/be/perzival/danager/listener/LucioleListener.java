@@ -2,7 +2,7 @@ package be.perzival.danager.listener;
 
 import be.perzival.danager.command.AbstractCommand;
 import be.perzival.danager.configuration.ConfigurationProperties;
-import be.perzival.danager.configuration.PropertiesManager;
+import be.perzival.danager.manager.PropertiesManager;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.listener.message.MessageCreateListener;
@@ -32,6 +32,7 @@ public class LucioleListener implements MessageCreateListener {
             while (matcher.find()) {
                 builder.append(matcher.group(0).substring(2) + " ");
             }
+
             message.reply(builder.toString());
         }
     }
