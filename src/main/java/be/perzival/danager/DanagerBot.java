@@ -57,7 +57,7 @@ public class DanagerBot {
         registerCommand();
         registerListener();
 
-        api.setGame("habiller ses doigts de pied en petit soldat");
+        api.setGame("Troll");
         // connect
         api.connect(new DanagerCallback());
     }
@@ -69,7 +69,6 @@ public class DanagerBot {
             value.attachDiscordAPI(api);
             handler.registerCommand(value);
         };
-
         commandExecutorssMap.forEach(biConsumer);
     }
 

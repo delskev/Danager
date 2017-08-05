@@ -5,9 +5,13 @@ package be.perzival.danager.exceptions;
  */
 public enum ExceptionsMessages {
 
-    //Command Excetpion
+    //Command exception
     COMMANDHANDLERALREADYATTACHED("The CommandHandler have already been attached !"),
-    COMMANDHANDLERNOTATTACHED("The CommandHandler is not attached !");
+    COMMANDHANDLERNOTATTACHED("The CommandHandler is not attached !"),
+    //Argument exception
+    INFOTOOMANYARGUMENTS("Info command contains too many arguments !"),
+    //ParserException
+    UNKNOWNCOMMANDPARSER("This parser is unknown: ");
 
     private String value;
 
@@ -15,7 +19,7 @@ public enum ExceptionsMessages {
         this.value = value;
     }
 
-    public String getValue() {
+    public String value() {
         return this.value;
     }
     public String toString(){

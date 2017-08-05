@@ -1,6 +1,8 @@
 package be.perzival.danager.command;
 
 import be.perzival.danager.command.admin.Delete;
+import be.perzival.danager.command.admin.Disable;
+import be.perzival.danager.command.admin.Enable;
 import be.perzival.danager.command.admin.Kick;
 import be.perzival.danager.command.utils.Help;
 import be.perzival.danager.command.utils.Info;
@@ -13,18 +15,22 @@ import java.awt.*;
  */
 public class Responsefactory {
 
-    public final static <T extends AbstractCommand> EmbedBuilder getEmbedResponse(Class<T> command, String message) {
+    public final static EmbedBuilder getEmbedResponse(DanagerCommand command, String message) {
         EmbedBuilder builder = buildBase(message);
 
-
-        if( Delete.class.equals(command)) {
+        if( message == null || message.equals(""))return null;
+        if( command instanceof Delete) {
             builder.setColor(Color.BLUE);
-        } else if(Kick.class.equals(command)){
+        } else if(command instanceof Kick){
             builder.setColor(Color.ORANGE);
-        } else if(Help.class.equals(command)){
+        } else if(command instanceof Help){
             builder.setColor(Color.green);
-        }else if(Info.class.equals(command)){
+        }else if(command instanceof Info){
             builder.setColor(Color.BLUE);
+        }else if(command instanceof Enable){
+            builder.setColor(Color.GREEN);
+        }else if(command instanceof Disable){
+            builder.setColor(Color.RED);
         }
 
         return builder;

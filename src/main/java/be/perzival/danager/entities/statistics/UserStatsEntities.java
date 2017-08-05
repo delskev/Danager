@@ -1,6 +1,7 @@
 package be.perzival.danager.entities.statistics;
 
 import de.btobastian.javacord.entities.User;
+import de.btobastian.javacord.entities.permissions.Role;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,7 @@ public final class UserStatsEntities implements StatisticEntities {
     private Integer maxPlayersConnected;
     private Map<User, String> playersBans;
     private Map<User, Integer> playersStrikes;
-    private Map<User, List<String>> playersRoles;
+    private Map<User, List<Role>> playersRoles;
     private Map<User, Integer> messagesPeruser;
 
     public UserStatsEntities() {
@@ -43,7 +44,7 @@ public final class UserStatsEntities implements StatisticEntities {
         return playersStrikes;
     }
 
-    public final Map<User, List<String>> getPlayersRoles() {
+    public final Map<User, List<Role>> getPlayersRoles() {
         return playersRoles;
     }
 
@@ -70,12 +71,7 @@ public final class UserStatsEntities implements StatisticEntities {
     }
 
     public final void strikePlayer(User user) {
-        Integer numberOfStrikes = null;
-        if( playersStrikes.get(user) == null) {
-            playersStrikes.put(user, 1);
-        }else {
-            playersStrikes.put(user, playersStrikes.get(user)+1);
-        }
-
+        Integer strikes = playersStrikes.get(user);
+        playersStrikes.put(user, strikes == null ? 1: strikes+1);
     }
 }

@@ -21,7 +21,7 @@ public class LucioleListener implements MessageCreateListener {
 
     @Override
     public void onMessageCreate(DiscordAPI discordAPI, Message message) {
-        ConfigurationProperties config = PropertiesManager.getInstance().getServerConfig(AbstractCommand.getCorrectServer(discordAPI, message));
+        ConfigurationProperties config = PropertiesManager.getInstance().getServerConfig(AbstractCommand.getServer(message));
         // check the content of the message
         if (!message.getAuthor().isBot() && config.getLuciole()) {
             String lucioleleries = message.getContent().toLowerCase();

@@ -2,19 +2,21 @@ package be.perzival.danager.command.admin;
 
 import be.perzival.danager.command.AbstractCommand;
 import be.perzival.danager.command.Responsefactory;
+import be.perzival.danager.command.argument.Argument;
+import be.perzival.danager.command.argument.ArgumentType;
+import be.perzival.danager.command.argument.parser.Parser;
 import be.perzival.danager.configuration.ConfigurationProperties;
-import be.perzival.danager.manager.PropertiesManager;
 import be.perzival.danager.exceptions.command.CommandException;
+import be.perzival.danager.manager.PropertiesManager;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.message.embed.EmbedBuilder;
 import de.btobastian.sdcf4j.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Perzival on 30/07/2017.
@@ -23,6 +25,9 @@ import java.util.concurrent.ExecutionException;
 public class Property extends AbstractCommand {
     static final Logger LOG = LoggerFactory.getLogger(Property.class);
 
+    @Autowired
+    @Qualifier("propertyCommandParser")
+    private Parser propertyCommandParser;
 
     /**
      * Display all the property of the bot configuration's file
@@ -32,35 +37,30 @@ public class Property extends AbstractCommand {
      * @throws CommandException throw cause of introspection
      */
     @Override
-    @Command(aliases = {"property" }, description = "Shows bot's configuration", usage = "property", privateMessages = false)
+    @Command(aliases = {"property" }, description = "Shows bot's configuration", usage = "property [set | get]", privateMessages = false)
     public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
-        ConfigurationProperties config = PropertiesManager.getInstance().getServerConfig(getCorrectServer(api, message));
-        try {
-            if(isOwner(api, message) || isadmin(api, message)) {
-                if( args.length == 0) {
-                    EmbedBuilder builder = Responsefactory.getEmbedResponse(this.getClass(), config.toString());
-                    message.getAuthor().sendMessage(null, builder).get();
-                }
-                //want to get or specify a property
-                if (args.length > 1 && "get".equals(args[0])) {//get case
-                    EmbedBuilder builder = Responsefactory.getEmbedResponse(this.getClass(), config.getProperty(args[1]));
-                    message.reply(null, builder);
-                }
-                if(args.length > 2 && "set".equalsIgnoreCase(args[0])) {
-                    config.setProperty(args[1], args[2]);
-                    PropertiesManager.getInstance().persistServerConfig(getCorrectServer(api, message));
-                    EmbedBuilder builder = Responsefactory.getEmbedResponse(this.getClass(), config.getProperty(args[1]));
-                    message.reply(null, builder);
-                }
+        Argument argument = propertyCommandParser.parse(args);
 
-            }
-        } catch (IOException e) {
-            message.reply("there's an error with setting property : "+ args[1]);
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        ConfigurationProperties config = PropertiesManager.getInstance().getServerConfig(getServer(message));
+
+        if(!isadmin(api, message))return;
+        EmbedBuilder builder = null;
+        if( args.length == 0) {
+            builder = Responsefactory.getEmbedResponse(this, config.toString());
         }
+        //want to get or specify a property
+        switch(argument.getArgument(ArgumentType.MODE)) {
+            case "get":
+                builder = Responsefactory.getEmbedResponse(this, config.getProperty(argument.getArgument(ArgumentType.PROPERTY)));
+                break;
+            case "set":
+                config.setProperty(argument.getArgument(ArgumentType.PROPERTY),
+                                    argument.getArgument(ArgumentType.VALUE));
+                PropertiesManager.getInstance().persistServerConfig(getServer(message));
+                builder = Responsefactory.getEmbedResponse(this, config.getProperty(args[1]));
+                break;
+        }
+        message.reply(null, builder);
+
     }
 }

@@ -1,9 +1,9 @@
 package be.perzival.danager.command;
 
-import be.perzival.danager.manager.PropertiesManager;
 import be.perzival.danager.exceptions.ExceptionsMessages;
 import be.perzival.danager.exceptions.command.CommandException;
 import be.perzival.danager.exceptions.command.CommandHandlerNotAttached;
+import be.perzival.danager.manager.PropertiesManager;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.Server;
 import de.btobastian.javacord.entities.User;
@@ -13,19 +13,17 @@ import de.btobastian.sdcf4j.CommandExecutor;
 import de.btobastian.sdcf4j.CommandHandler;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.stream.Stream;
 
 /**
  * Created by Perzival on 30/07/2017.
  */
-public abstract class  AbstractCommand implements CommandExecutor {
-
-    protected CommandHandler commandHandler = null;
-    protected DiscordAPI discordAPI = null;
-
-    private Boolean enabled = true;
+public abstract class  AbstractCommand implements CommandExecutor, DanagerCommand {
+    protected CommandHandler commandHandler;
+    protected DiscordAPI discordAPI;
+    private Boolean enabled = Boolean.TRUE;
 
     /**
      * this method have to be override
@@ -84,11 +82,19 @@ public abstract class  AbstractCommand implements CommandExecutor {
      * know if a command is enabled or not
      * @return
      */
-    public boolean isenabled() {
+    @Override
+    public boolean isEnabled() {
         return this.enabled;
     }
-
-    public static Server getCorrectServer(DiscordAPI api, Message message) {
+    /**
+     * set if a command is enabled or not
+     * @return
+     */
+    @Override
+    public void setEnabled(boolean enable) {
+        this.enabled = enable;
+    }
+    public static Server getServer(Message message) {
         //retrieve the serverId
         return message.getChannelReceiver().getServer();
     }
@@ -101,40 +107,28 @@ public abstract class  AbstractCommand implements CommandExecutor {
      */
     protected boolean isadmin(DiscordAPI api, Message message) {
         //get roles of the message's server
-        Collection<Role> roles = message.getAuthor().getRoles(getCorrectServer(api, message));
-        String[] adminRoles = PropertiesManager.getInstance().getServerConfig(getCorrectServer(api, message)).getAdmin();
-        Iterator itr = roles.iterator();
+        Server server = getServer(message);
+        Collection<Role> roles = message.getAuthor().getRoles(server);
+        String[] adminRoles = PropertiesManager.getInstance().getServerConfig(server).getAdmin();
+        Future<User> futureOwner = getServer(message).getOwner();
 
-        for(Role role: roles) {
-            for(int i = 0; i < adminRoles.length; ++i) {
-                if( adminRoles[i].toLowerCase().equals(role.getName().toLowerCase())) {
-                    return true;
-                }
-            }
+        User owner = null;
+        try {
+            owner = futureOwner.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-        
-        return false;
-    }
 
-    /**
-     * know if command's author is owner or not
-     * @param api
-     * @param message
-     * @return
-     * @throws ExecutionException cause of FutureCallback
-     * @throws InterruptedException cause of FutureCallback
-     */
-    protected boolean isOwner(DiscordAPI api, Message message) throws ExecutionException, InterruptedException {
-        Future<User> owner = getCorrectServer(api, message).getOwner();
-
-        return owner.get().equals(message.getAuthor());
+        return owner.equals(message.getAuthor()) || Stream.of(adminRoles).anyMatch(adminrole -> roles.contains(adminrole));
     }
 
     protected String correctAmountOfArgument(String[] args, int min, int max) {
-        if (args.length > max) { // more than 1 argument
+        if (args.length > max) { // more than max argument
             return "To many arguments!";
         }
-        if (args.length == 0 || args.length < min) { // more than 1 argument
+        if (args.length == 0 || args.length < min) { // less than min argument
             return "You need to provide more argument !";
         }
         return null;

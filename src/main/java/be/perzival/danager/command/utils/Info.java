@@ -2,11 +2,16 @@ package be.perzival.danager.command.utils;
 
 import be.perzival.danager.command.AbstractCommand;
 import be.perzival.danager.command.Responsefactory;
+import be.perzival.danager.command.argument.Argument;
+import be.perzival.danager.command.argument.ArgumentType;
+import be.perzival.danager.command.argument.parser.Parser;
 import be.perzival.danager.exceptions.command.CommandException;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.message.embed.EmbedBuilder;
 import de.btobastian.sdcf4j.Command;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
@@ -18,6 +23,10 @@ import java.util.Date;
 @Component
 public class Info extends AbstractCommand {
 
+    @Autowired
+    @Qualifier("infoCommandParser")
+    private Parser infoCommandParser;
+
     /**
      * Show info about the bot
      * @param args [author|time]
@@ -27,28 +36,27 @@ public class Info extends AbstractCommand {
     @Override
     @Command(aliases = {"info" }, description = "Shows some information about the bot.", usage = "info [author|time]")
     public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
-        if (args.length > 1) { // more than 1 argument
-            message.reply("To many arguments!");
-        }
+        Argument argument = infoCommandParser.parse(args);
+
+        if(!this.isEnabled())return;
         StringBuilder builder = new StringBuilder();
-        if (args.length == 0) { // !info
+        if( !argument.hasArgument()) { // !info
             builder.append("- **Author:** Perzival\n" +
                             "- **Language:** Java\n" +
                             "- **Command-Lib:** sdcf4j");
-        }
-        if (args.length == 1) { // 1 argument
-            if (args[0].equals("author")) { // !info author
-                builder.append("- **Name:** Perzival\n" +
-                                "- **Age:** 26\n" +
-                                "- **Website:** NONE");
+        }else { // 1 argument
+            switch(argument.getArgument(ArgumentType.MODE)) {
+                case "author":
+                    builder.append("- **Name:** Perzival\n" +"- **Age:** 26\n" +"- **Website:** NONE");
+                    break;
+                case "time":
+                    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+                    Date currentDate = new Date(System.currentTimeMillis());
+                    builder.append("il est " + format.format(currentDate) + " et tout va bien !");
+                    break;
             }
-            if (args[0].equals("time")) { // !info time
-                SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-                Date currentDate = new Date(System.currentTimeMillis());
-                builder.append("il est " + format.format(currentDate) + " et tout va bien !");
-            }
         }
-        EmbedBuilder embed = Responsefactory.getEmbedResponse(this.getClass(), builder.toString());
+        EmbedBuilder embed = Responsefactory.getEmbedResponse(this, builder.toString());
         message.reply(null, embed);
     }
 }

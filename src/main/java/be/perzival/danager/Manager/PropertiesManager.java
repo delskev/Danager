@@ -54,11 +54,13 @@ public class PropertiesManager {
         return serversConfigurations.get(server.getId());
     }
 
-    public final void persistServerConfig(Server server) throws IOException {
-        OutputStream os = new FileOutputStream(PATH + server.getId() +"-config.properties");
-        ConfigurationProperties config = getServerConfig(server);
-        config.getproperties().store(os, null);
-        os.close();
+    public final void persistServerConfig(Server server) {
+        try(OutputStream os = new FileOutputStream(PATH + server.getId() +"-config.properties")) {
+            ConfigurationProperties config = getServerConfig(server);
+            config.getproperties().store(os, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public final Properties createDefaultConfig(Server server) throws IOException {

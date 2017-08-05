@@ -43,26 +43,25 @@ public class Delete extends AbstractCommand {
             message.reply("no argument provided !");
         }
         try {
-            if(isOwner(api, message) || isadmin(api, message)) {
-                Future<MessageHistory> messageHistory = message.getChannelReceiver().getMessageHistory(Integer.parseInt(args[0]));
+            if(!isadmin(api, message))return;
+            Future<MessageHistory> messageHistory = message.getChannelReceiver().getMessageHistory(Integer.parseInt(args[0]));
 
-                Collection<Message> messagesSorted = messageHistory.get().getMessages();
+            Collection<Message> messagesSorted = messageHistory.get().getMessages();
 
-                //avoid pinned message suppression
-                Collection<Message> messages = new ArrayList<>();
-                for (Message msg : messagesSorted) {
-                    LOG.trace("message is pinned : " + msg.isPinned());
-                    if(!msg.isPinned()) {
-                        messages.add(msg);
-                    }else {
-                        LOG.trace("message is pinned");
-                    }
+            //avoid pinned message suppression
+            Collection<Message> messages = new ArrayList<>();
+            for (Message msg : messagesSorted) {
+                LOG.trace("message is pinned : " + msg.isPinned());
+                if(!msg.isPinned()) {
+                    messages.add(msg);
+                }else {
+                    LOG.trace("message is pinned");
                 }
-
-                message.getChannelReceiver().bulkDelete(messages.toArray(new Message[messages.size()])).get();
-                EmbedBuilder builder = Responsefactory.getEmbedResponse(this.getClass(), "Delete "+ messages.size()+ " messages");
-                message.getChannelReceiver().sendMessage(null, builder).get();
             }
+
+            message.getChannelReceiver().bulkDelete(messages.toArray(new Message[messages.size()])).get();
+            EmbedBuilder builder = Responsefactory.getEmbedResponse(this, "Delete "+ messages.size()+ " messages");
+            message.getChannelReceiver().sendMessage(null, builder).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {

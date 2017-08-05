@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  * Created by Perzival on 30/07/2017.
  */
 @Component
-public class Help extends AbstractCommand {
+public class Help extends AbstractCommand{
 
 
     /**
@@ -53,7 +53,7 @@ public class Help extends AbstractCommand {
             }
         }
         builder.append("\n```"); // end of xml code block
-        EmbedBuilder embed = Responsefactory.getEmbedResponse(this.getClass(), builder.toString());
+        EmbedBuilder embed = Responsefactory.getEmbedResponse(this, builder.toString());
         message.reply(null, embed);
     }
 }

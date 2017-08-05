@@ -7,4 +7,5 @@
     <context:component-scan base-package="be.perzival.danager"/>
     <context:annotation-config/>
 
+
 </beans>

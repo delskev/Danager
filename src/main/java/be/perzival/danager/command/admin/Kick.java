@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Perzival on 01/08/2017.
@@ -35,37 +34,28 @@ public class Kick extends AbstractCommand {
     @Override
     @Command(aliases = {"kick" }, description = "kick a user with an optionnal reason", usage = "kick [user][reason]", privateMessages = false)
     public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
-        if (args.length == 0 || args.length < 1) { // more than 1 argument
+        if (args.length == 0) { // more than 1 argument
             message.reply("You need to provide more argument !");
+            return;
         }
+        if(!isadmin(api, message))return;
+        Server server = getServer(message);
+        Collection<User> members = server.getMembers();
 
-        try {
-            if( isadmin(api, message) || isOwner(api, message)) {
-                Server server = getCorrectServer(api, message);
-                Collection<User> members = server.getMembers();
-
-                User user  = findUser(members, args[0]);
-                StringBuilder reason = new StringBuilder();
-                if(args.length >=2) {
-                    //StringBuilder builder = new StringBuilder();
-                    for(int i = 1; i < args.length; ++i) {
-                        reason.append(args[i]+ " ");
-                    }
-                    user.sendMessage(reason.toString());
-                    EmbedBuilder builder = Responsefactory.getEmbedResponse(this.getClass(), "tu as été kické du serveur "+ server.getName() + "\nraison: " +reason );
-                    user.sendMessage(null, builder).get();
-                }
-                server.kickUser(user).get();
-                EmbedBuilder builder = Responsefactory.getEmbedResponse(this.getClass(), "Kick "+ user.getName() + "\nraison: " +reason );
-                message.getChannelReceiver().sendMessage(null, builder).get();
+        User user  = findUser(members, args[0]);
+        StringBuilder reason = new StringBuilder();
+        if(args.length >=2) {
+            //StringBuilder builder = new StringBuilder();
+            for(int i = 1; i < args.length; ++i) {
+                reason.append(args[i]+ " ");
             }
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } {
-
+            user.sendMessage(reason.toString());
+            EmbedBuilder builder = Responsefactory.getEmbedResponse(this, "tu as été kické du serveur "+ server.getName() + "\nraison: " +reason );
+            user.sendMessage(null, builder);
         }
+        server.kickUser(user);
+        EmbedBuilder builder = Responsefactory.getEmbedResponse(this, "Kick "+ user.getName() + "\nraison: " +reason );
+        message.getChannelReceiver().sendMessage(null, builder);
     }
 
 }

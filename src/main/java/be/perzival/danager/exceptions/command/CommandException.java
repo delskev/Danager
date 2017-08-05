@@ -15,7 +15,10 @@ public class CommandException extends Exception {
     }
 
     public CommandException (ExceptionsMessages message) {
-        super(message.getValue());
+        super(message.value());
+    }
+    public CommandException (String message) {
+        super(message);
     }
 
     public CommandException (Throwable cause) {

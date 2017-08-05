@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -77,9 +76,10 @@ public class ConfigurationProperties {
         return key  + "=" + applicationProperties.getProperty(key);
     }
 
-    public final String setProperty(String key, String value) throws IOException {
+    public final String setProperty(String key, String value){
         LOG.debug("Setting property: "+ key );
-        return applicationProperties.setProperty(key, value).toString();
+        String property = applicationProperties.setProperty(key, value).toString();
+        return property != null ? property: "Bad property:" + key;
     }
 
 
