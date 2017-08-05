@@ -35,38 +35,33 @@ public class Delete extends AbstractCommand {
      */
     @Override
     @Command(aliases = {"delete" }, description = "delete message on current channel", usage = "delete [number of message] (max 100)", privateMessages = false)
-    public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
+    public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException, ExecutionException, InterruptedException {
         if (args.length > 1) { // more than 1 argument
             message.reply("To many arguments!");
         }
         if (args.length == 0) { // more than 1 argument
             message.reply("no argument provided !");
         }
-        try {
-            if(!isadmin(api, message))return;
-            Future<MessageHistory> messageHistory = message.getChannelReceiver().getMessageHistory(Integer.parseInt(args[0]));
 
-            Collection<Message> messagesSorted = messageHistory.get().getMessages();
+        if(!isadmin(message))return;
+        Future<MessageHistory> messageHistory = message.getChannelReceiver().getMessageHistory(Integer.parseInt(args[0]));
 
-            //avoid pinned message suppression
-            Collection<Message> messages = new ArrayList<>();
-            for (Message msg : messagesSorted) {
-                LOG.trace("message is pinned : " + msg.isPinned());
-                if(!msg.isPinned()) {
-                    messages.add(msg);
-                }else {
-                    LOG.trace("message is pinned");
-                }
+        Collection<Message> messagesSorted = messageHistory.get().getMessages();
+
+        //avoid pinned message suppression
+        Collection<Message> messages = new ArrayList<>();
+        for (Message msg : messagesSorted) {
+            LOG.trace("message is pinned : " + msg.isPinned());
+            if(!msg.isPinned()) {
+                messages.add(msg);
+            }else {
+                LOG.trace("message is pinned");
             }
-
-            message.getChannelReceiver().bulkDelete(messages.toArray(new Message[messages.size()])).get();
-            EmbedBuilder builder = Responsefactory.getEmbedResponse(this, "Delete "+ messages.size()+ " messages");
-            message.getChannelReceiver().sendMessage(null, builder).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         }
+
+        message.getChannelReceiver().bulkDelete(messages.toArray(new Message[messages.size()]));
+        EmbedBuilder builder = Responsefactory.getEmbedResponse(this, "Delete "+ messages.size()+ " messages");
+        message.getChannelReceiver().sendMessage(null, builder);
 
     }
 }

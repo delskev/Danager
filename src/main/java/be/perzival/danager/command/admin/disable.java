@@ -19,8 +19,8 @@ import java.util.Map;
  * Created by Perzival on 01/08/2017.
  */
 @Component
-public class Enable extends AbstractCommand {
-    static final Logger LOG = LoggerFactory.getLogger(Enable.class);
+public class Disable extends AbstractCommand {
+    static final Logger LOG = LoggerFactory.getLogger(Disable.class);
 
     @Autowired
     Map<String, AbstractCommand> commandExecutorssMap;
@@ -34,7 +34,7 @@ public class Enable extends AbstractCommand {
      * @throws CommandException
      */
     @Override
-    @Command(aliases = {"enable" }, description = "enable a command", usage = "enable [command]", privateMessages = false)
+    @Command(aliases = {"disable" }, description = "disable a command", usage = "disable [command]", privateMessages = false)
     public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
         if (args.length == 0) { // more than 1 argument
             message.reply("You need to provide more argument !");
@@ -45,8 +45,8 @@ public class Enable extends AbstractCommand {
 
         DanagerCommand command = commandExecutorssMap.get(args[0]);
         if(command != null) {
-            command.setEnabled(true);
-            EmbedBuilder embed = Responsefactory.getEmbedResponse(this, "command "+args[0] + " enabled");
+            command.setEnabled(false);
+            EmbedBuilder embed = Responsefactory.getEmbedResponse(this, "command "+args[0] + " disabled");
             message.reply(null, embed);
         }
     }

@@ -32,7 +32,7 @@ public abstract class  AbstractCommand implements CommandExecutor, DanagerComman
      * @return
      * @throws CommandException
      */
-    public abstract void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException;
+    public abstract void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException, ExecutionException, InterruptedException;
 
     /**
      * use to attach a command handler to the command
@@ -101,11 +101,10 @@ public abstract class  AbstractCommand implements CommandExecutor, DanagerComman
 
     /**
      * know if command's author is admin or not
-     * @param api
      * @param message
      * @return
      */
-    protected boolean isadmin(DiscordAPI api, Message message) {
+    protected boolean isadmin(Message message) {
         //get roles of the message's server
         Server server = getServer(message);
         Collection<Role> roles = message.getAuthor().getRoles(server);

@@ -45,7 +45,7 @@ public class Info extends AbstractCommand {
                             "- **Language:** Java\n" +
                             "- **Command-Lib:** sdcf4j");
         }else { // 1 argument
-            switch(argument.getArgument(ArgumentType.MODE)) {
+            switch(argument.getArgument(ArgumentType.MODE).get()) {
                 case "author":
                     builder.append("- **Name:** Perzival\n" +"- **Age:** 26\n" +"- **Website:** NONE");
                     break;

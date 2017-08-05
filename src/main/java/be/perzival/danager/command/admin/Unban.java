@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
  * Created by Perzival on 01/08/2017.
  */
 @Component
-public class Ban extends ModerationCommand {
+public class Unban extends ModerationCommand {
     /**
-     *  ban user from server
+     *  unban from server
      * @param api
      * @param message
      * @param args
@@ -20,9 +20,9 @@ public class Ban extends ModerationCommand {
      * @throws CommandException
      */
     @Override
-    @Command(aliases = {"ban" }, description = "ban a user with an optionnal reason", usage = "ban [user][reason]", privateMessages = false)
+    @Command(aliases = {"unban" }, description = "Unban a user with an optionnal reason", usage = "Unban [user]", privateMessages = false)
     public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
-        this.execute(api, message, args, Moderationtype.BAN);
+        this.execute(api, message, args, Moderationtype.UNBAN);
     }
 
 }

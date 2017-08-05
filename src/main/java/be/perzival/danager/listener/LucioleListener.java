@@ -17,23 +17,23 @@ import java.util.regex.Pattern;
 @Component
 public class LucioleListener implements MessageCreateListener {
 
-
-
     @Override
     public void onMessageCreate(DiscordAPI discordAPI, Message message) {
-        ConfigurationProperties config = PropertiesManager.getInstance().getServerConfig(AbstractCommand.getServer(message));
-        // check the content of the message
-        if (!message.getAuthor().isBot() && config.getLuciole()) {
-            String lucioleleries = message.getContent().toLowerCase();
-            Pattern pattern = Pattern.compile("\\b([a-z]*di|dy)\\S*");
-            Matcher matcher = pattern.matcher(lucioleleries);
+        if(!message.isPrivateMessage()) {
+            ConfigurationProperties config = PropertiesManager.getInstance().getServerConfig(AbstractCommand.getServer(message));
+            // check the content of the message
+            if (!message.getAuthor().isBot() && config.getLuciole()) {
+                String lucioleleries = message.getContent().toLowerCase();
+                Pattern pattern = Pattern.compile("\\b([a-z]*di|dy)\\S*");
+                Matcher matcher = pattern.matcher(lucioleleries);
 
-            StringBuilder builder = new StringBuilder();
-            while (matcher.find()) {
-                builder.append(matcher.group(0).substring(2) + " ");
+                StringBuilder builder = new StringBuilder();
+                while (matcher.find()) {
+                    builder.append(matcher.group(0).substring(2) + " ");
+                }
+
+                message.reply(builder.toString());
             }
-
-            message.reply(builder.toString());
         }
     }
 }

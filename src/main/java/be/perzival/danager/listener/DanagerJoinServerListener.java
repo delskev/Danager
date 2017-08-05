@@ -20,7 +20,6 @@ public class DanagerJoinServerListener implements ServerJoinListener {
             server.getChannels().forEach(chan -> { if("mychannel".equals(chan.getName()))server.getChannelById(chan.getId()).sendMessage("mymessage");});
 
         } catch (IOException e) {
-
             e.printStackTrace();
         }
     }

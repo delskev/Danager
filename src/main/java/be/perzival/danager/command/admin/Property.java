@@ -15,7 +15,6 @@ import de.btobastian.sdcf4j.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +25,6 @@ public class Property extends AbstractCommand {
     static final Logger LOG = LoggerFactory.getLogger(Property.class);
 
     @Autowired
-    @Qualifier("propertyCommandParser")
     private Parser propertyCommandParser;
 
     /**
@@ -43,19 +41,19 @@ public class Property extends AbstractCommand {
 
         ConfigurationProperties config = PropertiesManager.getInstance().getServerConfig(getServer(message));
 
-        if(!isadmin(api, message))return;
+        if(!isadmin(message))return;
         EmbedBuilder builder = null;
-        if( args.length == 0) {
+        if( !argument.hasArgument()) {
             builder = Responsefactory.getEmbedResponse(this, config.toString());
         }
         //want to get or specify a property
-        switch(argument.getArgument(ArgumentType.MODE)) {
+        switch(argument.getArgument(ArgumentType.MODE).get()) {
             case "get":
-                builder = Responsefactory.getEmbedResponse(this, config.getProperty(argument.getArgument(ArgumentType.PROPERTY)));
+                builder = Responsefactory.getEmbedResponse(this, config.getProperty(argument.getArgument(ArgumentType.PROPERTY).get()));
                 break;
             case "set":
-                config.setProperty(argument.getArgument(ArgumentType.PROPERTY),
-                                    argument.getArgument(ArgumentType.VALUE));
+                config.setProperty(argument.getArgument(ArgumentType.PROPERTY).get(),
+                                   argument.getArgument(ArgumentType.VALUE).get());
                 PropertiesManager.getInstance().persistServerConfig(getServer(message));
                 builder = Responsefactory.getEmbedResponse(this, config.getProperty(args[1]));
                 break;

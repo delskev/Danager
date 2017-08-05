@@ -7,5 +7,7 @@ public enum ArgumentType {
     MODE,
     BAD,
     PROPERTY,
-    VALUE
+    VALUE,
+    USER,
+    REASON
 }
