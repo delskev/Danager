@@ -46,7 +46,7 @@ public class Disable extends AbstractCommand {
         DanagerCommand command = commandExecutorssMap.get(args[0]);
         if(command != null) {
             command.setEnabled(false);
-            EmbedBuilder embed = Responsefactory.getEmbedResponse(this, "command "+args[0] + " disabled");
+            EmbedBuilder embed = Responsefactory.getEmbedResponse(this.getClass(), "command "+args[0] + " disabled");
             message.reply(null, embed);
         }
     }

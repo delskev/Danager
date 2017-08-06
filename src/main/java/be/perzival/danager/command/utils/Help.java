@@ -53,7 +53,7 @@ public class Help extends AbstractCommand{
             }
         }
         builder.append("\n```"); // end of xml code block
-        EmbedBuilder embed = Responsefactory.getEmbedResponse(this, builder.toString());
+        EmbedBuilder embed = Responsefactory.getEmbedResponse(this.getClass(), builder.toString());
         message.reply(null, embed);
     }
 }

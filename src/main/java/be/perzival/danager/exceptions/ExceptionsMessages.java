@@ -9,7 +9,8 @@ public enum ExceptionsMessages {
     COMMANDHANDLERALREADYATTACHED("The CommandHandler have already been attached !"),
     COMMANDHANDLERNOTATTACHED("The CommandHandler is not attached !"),
     //Argument exception
-    INFOTOOMANYARGUMENTS("Info command contains too many arguments !"),
+    TOOMANYARGUMENTS("Command contains too many arguments !"),
+    NOTENOUGHARGUMENTS("Command contains not enough arguments !"),
     //ParserException
     UNKNOWNCOMMANDPARSER("This parser is unknown: ");
 

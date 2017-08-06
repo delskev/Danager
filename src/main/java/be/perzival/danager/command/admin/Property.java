@@ -44,18 +44,18 @@ public class Property extends AbstractCommand {
         if(!isadmin(message))return;
         EmbedBuilder builder = null;
         if( !argument.hasArgument()) {
-            builder = Responsefactory.getEmbedResponse(this, config.toString());
+            builder = Responsefactory.getEmbedResponse(this.getClass(), config.toString());
         }
         //want to get or specify a property
         switch(argument.getArgument(ArgumentType.MODE).get()) {
             case "get":
-                builder = Responsefactory.getEmbedResponse(this, config.getProperty(argument.getArgument(ArgumentType.PROPERTY).get()));
+                builder = Responsefactory.getEmbedResponse(this.getClass(), config.getProperty(argument.getArgument(ArgumentType.PROPERTY).get()));
                 break;
             case "set":
                 config.setProperty(argument.getArgument(ArgumentType.PROPERTY).get(),
                                    argument.getArgument(ArgumentType.VALUE).get());
                 PropertiesManager.getInstance().persistServerConfig(getServer(message));
-                builder = Responsefactory.getEmbedResponse(this, config.getProperty(args[1]));
+                builder = Responsefactory.getEmbedResponse(this.getClass(), config.getProperty(args[1]));
                 break;
         }
         message.reply(null, builder);

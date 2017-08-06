@@ -11,7 +11,6 @@ import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.message.embed.EmbedBuilder;
 import de.btobastian.sdcf4j.Command;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
@@ -24,7 +23,6 @@ import java.util.Date;
 public class Info extends AbstractCommand {
 
     @Autowired
-    @Qualifier("infoCommandParser")
     private Parser infoCommandParser;
 
     /**
@@ -56,7 +54,7 @@ public class Info extends AbstractCommand {
                     break;
             }
         }
-        EmbedBuilder embed = Responsefactory.getEmbedResponse(this, builder.toString());
+        EmbedBuilder embed = Responsefactory.getEmbedResponse(this.getClass(), builder.toString());
         message.reply(null, embed);
     }
 }

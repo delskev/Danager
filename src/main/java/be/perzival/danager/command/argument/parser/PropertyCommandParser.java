@@ -18,7 +18,7 @@ public class PropertyCommandParser implements Parser {
         Argument argument = new ArgumentImpl();
 
         if (args.length > 3) { // more than 1 argument
-            throw  new TooManyArgumentException(ExceptionsMessages.INFOTOOMANYARGUMENTS);
+            throw  new TooManyArgumentException(ExceptionsMessages.TOOMANYARGUMENTS);
         }
 
         if (args.length == 0) { // !property

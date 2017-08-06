@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Collection;
-import java.util.concurrent.Future;
 
 /**
  * Created by Perzival on 05/08/2017.
@@ -38,28 +37,22 @@ public abstract class ModerationCommand extends AbstractCommand {
         Collection<User> members = server.getMembers();
 
         User user  = findUser(members, argument.getArgument(ArgumentType.USER).get());
-        Future<Void> callback = null;
         switch(moderationtype) {
             case KICK:
-                callback = server.kickUser(user);
+                server.kickUser(user);
                 break;
             case BAN:
-                callback = server.banUser(user);
+                server.banUser(user);
                 break;
             case UNBAN:
-                callback = server.unbanUser(user.getId());
+                server.unbanUser(user.getId());
                 break;
         }
         String reason = argument.getArgument(ArgumentType.REASON).orElse("/");
         user.sendMessage(reason.toString());
-        EmbedBuilder builder = Responsefactory.getEmbedResponse(this, moderationtype.getMessage()+ server.getName() + "\nReason: " +reason );
+        EmbedBuilder builder = Responsefactory.getEmbedResponse(this.getClass(), moderationtype.getType()+ user.getName() + "\nReason: "+reason);
         user.sendMessage(null, builder);
-
-        builder = Responsefactory.getEmbedResponse(this, moderationtype.getType()+ user.getName() + "\nReason: "+reason);
         message.getChannelReceiver().sendMessage(null, builder);
-
-
-        System.out.println("kick is done: "+callback.isDone());
     }
 
     protected enum Moderationtype {

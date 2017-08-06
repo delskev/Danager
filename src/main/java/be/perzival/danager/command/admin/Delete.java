@@ -60,7 +60,7 @@ public class Delete extends AbstractCommand {
         }
 
         message.getChannelReceiver().bulkDelete(messages.toArray(new Message[messages.size()]));
-        EmbedBuilder builder = Responsefactory.getEmbedResponse(this, "Delete "+ messages.size()+ " messages");
+        EmbedBuilder builder = Responsefactory.getEmbedResponse(this.getClass(), "Delete "+ messages.size()+ " messages");
         message.getChannelReceiver().sendMessage(null, builder);
 
     }

@@ -1,6 +1,7 @@
 package be.perzival.danager.manager;
 
 
+import be.perzival.danager.command.utils.Afk;
 import be.perzival.danager.entities.statistics.StatisticEntities;
 import be.perzival.danager.entities.statistics.UserStatsEntities;
 import de.btobastian.javacord.entities.User;
@@ -83,4 +84,9 @@ public class StatisticsManagerTest {
     }
 
 
+    @Test
+    public void testregex() {
+
+        System.out.println(Afk.class == Afk.class);
+    }
 }

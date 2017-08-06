@@ -32,6 +32,6 @@ public class Strike extends AbstractCommand {
             message.reply("You need to provide more argument !");
         }
 
-        message.reply(Responsefactory.getEmbedResponse(this, "this is not yet Implemented").toString());
+        message.reply(Responsefactory.getEmbedResponse(this.getClass(), "this is not yet Implemented").toString());
     }
 }
