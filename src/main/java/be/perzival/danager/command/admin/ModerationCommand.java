@@ -11,6 +11,8 @@ import de.btobastian.javacord.entities.Server;
 import de.btobastian.javacord.entities.User;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.message.embed.EmbedBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -20,6 +22,8 @@ import java.util.Collection;
  * Created by Perzival on 05/08/2017.
  */
 public abstract class ModerationCommand extends AbstractCommand {
+    static final Logger LOG = LoggerFactory.getLogger(ModerationCommand.class);
+
     @Autowired
     @Qualifier("moderationCommandParser")
     private Parser moderationCommandParser;
@@ -48,6 +52,7 @@ public abstract class ModerationCommand extends AbstractCommand {
                 server.unbanUser(user.getId());
                 break;
         }
+        LOG.info(moderationtype.getType() + "player "+ user + "from server "+ message.getChannelReceiver().getServer());
         String reason = argument.getArgument(ArgumentType.REASON).orElse("/");
         user.sendMessage(reason.toString());
         EmbedBuilder builder = Responsefactory.getEmbedResponse(this.getClass(), moderationtype.getType()+ user.getName() + "\nReason: "+reason);

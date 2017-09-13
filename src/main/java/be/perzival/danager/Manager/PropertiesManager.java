@@ -16,7 +16,7 @@ import java.util.Properties;
  */
 public class PropertiesManager {
     static final Logger LOG = LoggerFactory.getLogger(PropertiesManager.class);
-    private static final String PATH = "../Danager-config-file/";
+    private static final String PATH = "./Danager-config-file/";
 
     private static PropertiesManager INSTANCE = null;
 
@@ -35,9 +35,8 @@ public class PropertiesManager {
     public final ConfigurationProperties getServerConfig(Server server) {
         //manage bot reconnection
         if( serversConfigurations.get(server.getId()) == null) {
-            try {
                 String fileName = PATH + server.getId() + "-config.properties";
-                InputStream is = new FileInputStream(fileName);
+            try(InputStream is = new FileInputStream(fileName)) {
                 Properties properties = new Properties();
                 // load a properties file
                 properties.load(is);
@@ -46,7 +45,7 @@ public class PropertiesManager {
                 serversConfigurations.put(server.getId(), configurationProperties);
                 is.close();
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                createDefaultConfig(server);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -63,21 +62,27 @@ public class PropertiesManager {
         }
     }
 
-    public final Properties createDefaultConfig(Server server) throws IOException {
+    public final Properties createDefaultConfig(Server server) {
+        LOG.info("Create default configuration file");
         String fileName = PATH + server.getId() + "-config.properties";
         Properties properties = new Properties();
-        OutputStream os = new FileOutputStream(fileName);
-        //prepare all the properties
-        properties.put(PropertiesEnum.ADMIN.value(), "Administrator,moderateur");
-        properties.put(PropertiesEnum.PREFIX.value(), "!");
-        properties.put(PropertiesEnum.LUCIOLE.value(), "false");
-        //add to manager
-        ConfigurationProperties configurationProperties = new ConfigurationProperties(properties);
-        serversConfigurations.put(server.getId(), configurationProperties);
+        try(OutputStream os = new FileOutputStream(fileName)) {
+            //prepare all the properties
+            properties.put(PropertiesEnum.ADMIN.value(), "Administrator,moderateur");
+            properties.put(PropertiesEnum.PREFIX.value(), "!");
+            properties.put(PropertiesEnum.LUCIOLE.value(), "false");
+            properties.put(PropertiesEnum.NEWCONNECTION.value(), "true");
+            //add to manager
+            ConfigurationProperties configurationProperties = new ConfigurationProperties(properties);
+            serversConfigurations.put(server.getId(), configurationProperties);
 
-        // save a properties file
-        properties.store(os, null);
-        os.close();
+            // save a properties file
+            properties.store(os, null);
+            os.flush();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         LOG.info("Configuration file created: "+ fileName);
 
         return properties;

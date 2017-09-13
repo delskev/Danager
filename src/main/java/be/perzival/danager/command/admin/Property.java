@@ -45,20 +45,24 @@ public class Property extends AbstractCommand {
         EmbedBuilder builder = null;
         if( !argument.hasArgument()) {
             builder = Responsefactory.getEmbedResponse(this.getClass(), config.toString());
+            message.getAuthor().sendMessage(null, builder);
+        }else { //want to get or specify a property
+            switch (argument.getArgument(ArgumentType.MODE).get()) {
+                case "get":
+                    LOG.info("Set property " + argument.getArgument(ArgumentType.PROPERTY) + "from "+ message.getChannelReceiver().getServer());
+                    builder = Responsefactory.getEmbedResponse(this.getClass(), config.getProperty(argument.getArgument(ArgumentType.PROPERTY).get()));
+                    break;
+                case "set":
+                    LOG.info("Set property " + argument.getArgument(ArgumentType.PROPERTY) + "from "+ message.getChannelReceiver().getServer());
+                    config.setProperty(argument.getArgument(ArgumentType.PROPERTY).get(),
+                            argument.getArgument(ArgumentType.VALUE).get());
+                    PropertiesManager.getInstance().persistServerConfig(getServer(message));
+                    builder = Responsefactory.getEmbedResponse(this.getClass(), config.getProperty(args[1]));
+                    break;
+            }
+            message.reply(null, builder);
         }
-        //want to get or specify a property
-        switch(argument.getArgument(ArgumentType.MODE).get()) {
-            case "get":
-                builder = Responsefactory.getEmbedResponse(this.getClass(), config.getProperty(argument.getArgument(ArgumentType.PROPERTY).get()));
-                break;
-            case "set":
-                config.setProperty(argument.getArgument(ArgumentType.PROPERTY).get(),
-                                   argument.getArgument(ArgumentType.VALUE).get());
-                PropertiesManager.getInstance().persistServerConfig(getServer(message));
-                builder = Responsefactory.getEmbedResponse(this.getClass(), config.getProperty(args[1]));
-                break;
-        }
-        message.reply(null, builder);
+
 
     }
 }

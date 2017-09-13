@@ -5,6 +5,8 @@ import be.perzival.danager.command.argument.ArgumentImpl;
 import be.perzival.danager.command.argument.ArgumentType;
 import be.perzival.danager.exceptions.ExceptionsMessages;
 import be.perzival.danager.exceptions.command.TooManyArgumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class InfoCommandParser implements Parser {
+    static final Logger LOG = LoggerFactory.getLogger(InfoCommandParser.class);
 
 
     @Override

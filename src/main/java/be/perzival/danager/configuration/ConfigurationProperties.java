@@ -54,6 +54,10 @@ public class ConfigurationProperties {
         applicationProperties.setProperty(PropertiesEnum.LUCIOLE.value(), luciole.toString());
     }
 
+    public Boolean getNewConnection() {
+        return applicationProperties.get(PropertiesEnum.NEWCONNECTION.value()).toString().equalsIgnoreCase("true");
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

@@ -14,6 +14,7 @@ public class ParserUtils {
         for(int i = offset; i < args.length; ++i) {
             concat.append(args[i]+ spacer);
         }
+        concat.deleteCharAt(concat.toString().length()-1);
         return concat.toString();
     }
 

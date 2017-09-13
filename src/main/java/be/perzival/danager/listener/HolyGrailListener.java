@@ -5,10 +5,13 @@ import be.perzival.danager.configuration.ConfigurationProperties;
 import be.perzival.danager.manager.PropertiesManager;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.Channel;
+import de.btobastian.javacord.entities.InviteBuilder;
 import de.btobastian.javacord.entities.Server;
 import de.btobastian.javacord.entities.User;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.listener.message.MessageCreateListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.regex.Pattern;
  */
 @Component
 public class HolyGrailListener implements MessageCreateListener {
+    static final Logger LOG = LoggerFactory.getLogger(HolyGrailListener.class);
     private static final String COMMAND = "holygrail";
 
     Optional<User> currentUser = null;
@@ -84,7 +88,8 @@ public class HolyGrailListener implements MessageCreateListener {
     }
 
     private void kickUser(DiscordAPI api, Server server, User user, Message message) {
-        //InviteBuilder inviteBuilder = new ImplInviteBuilder(message.getChannelReceiver(), api);
-        //server.kickUser(user);
+        InviteBuilder inviteBuilder = message.getChannelReceiver().getInviteBuilder();
+        server.kickUser(user);
+        inviteBuilder.create();
     }
 }

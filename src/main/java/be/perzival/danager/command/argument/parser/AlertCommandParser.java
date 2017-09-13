@@ -3,8 +3,11 @@ package be.perzival.danager.command.argument.parser;
 import be.perzival.danager.command.argument.Argument;
 import be.perzival.danager.command.argument.ArgumentImpl;
 import be.perzival.danager.command.argument.ArgumentType;
+import be.perzival.danager.command.utils.Alert;
 import be.perzival.danager.exceptions.command.TooManyArgumentException;
 import be.perzival.danager.utils.ParserUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AlertCommandParser implements Parser {
+    static final Logger LOG = LoggerFactory.getLogger(Alert.class);
 
 
     @Override

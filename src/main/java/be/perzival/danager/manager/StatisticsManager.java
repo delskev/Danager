@@ -1,6 +1,9 @@
 package be.perzival.danager.manager;
 
 import be.perzival.danager.entities.statistics.*;
+import de.btobastian.javacord.entities.Server;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,19 +12,14 @@ import java.util.Map;
  * Created by Perzival on 02/08/2017.
  */
 public class StatisticsManager {
+    static final Logger LOG = LoggerFactory.getLogger(StatisticsManager.class);
 
     public static StatisticsManager INSTANCE = null;
 
-    private Map<String, StatisticEntities> statisticsMap;
+    private Map<Server, DanagerStatistics> danagerStatisticsMap;
 
     private StatisticsManager() {
-        this.statisticsMap = new HashMap<>();
-
-        this.statisticsMap.put(UserStatsEntities.class.getName(), new UserStatsEntities());
-        this.statisticsMap.put(ServerStatsEntities.class.getName(), new ServerStatsEntities());
-        this.statisticsMap.put(MessagesStatsEntities.class.getName(), new MessagesStatsEntities());
-        this.statisticsMap.put(GamesStatsEntities.class.getName(), new GamesStatsEntities());
-        this.statisticsMap.put(ChannelsStatsEntities.class.getName(), new ChannelsStatsEntities());
+        this.danagerStatisticsMap = new HashMap<>();
     }
 
     /**
@@ -32,11 +30,11 @@ public class StatisticsManager {
         return INSTANCE == null ? (INSTANCE = new StatisticsManager()): INSTANCE;
     }
 
-    public <T extends StatisticEntities> T getStatistics(Class<T> statisticsEntities) {
-        return (T) statisticsMap.get(statisticsEntities.getName());
-    }
+    public DanagerStatistics getStatisticsMap(Server server) {
+        if( !danagerStatisticsMap.containsKey(server)) {
+            danagerStatisticsMap.put(server, new DanagerStatistics());
+        }
 
-    public Map<String, StatisticEntities> getStatisticsMap() {
-        return statisticsMap;
+        return danagerStatisticsMap.get(server);
     }
 }

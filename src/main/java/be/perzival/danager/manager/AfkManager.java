@@ -1,6 +1,8 @@
 package be.perzival.danager.manager;
 
 import de.btobastian.javacord.entities.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +11,7 @@ import java.util.Map;
  * Created by Perzival on 02/08/2017.
  */
 public class AfkManager {
+    static final Logger LOG = LoggerFactory.getLogger(AfkManager.class);
 
     public static AfkManager INSTANCE = null;
 

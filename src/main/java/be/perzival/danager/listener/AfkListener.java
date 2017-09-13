@@ -7,6 +7,8 @@ import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.User;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.listener.message.MessageCreateListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
  */
 @Component
 public class AfkListener implements MessageCreateListener {
+    static final Logger LOG = LoggerFactory.getLogger(AfkListener.class);
 
     @Override
     public void onMessageCreate(DiscordAPI discordAPI, Message message) {

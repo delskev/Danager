@@ -49,6 +49,7 @@ public class Enable extends AbstractCommand {
             EmbedBuilder embed = Responsefactory.getEmbedResponse(this.getClass(), "command "+args[0] + " enabled");
             message.reply(null, embed);
         }
+        LOG.info("command "+args[0] + " enabled from " + message.getChannelReceiver().getServer());
     }
 
 }

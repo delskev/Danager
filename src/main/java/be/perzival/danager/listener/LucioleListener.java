@@ -6,6 +6,8 @@ import be.perzival.danager.manager.PropertiesManager;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.listener.message.MessageCreateListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
@@ -16,6 +18,7 @@ import java.util.regex.Pattern;
  */
 @Component
 public class LucioleListener implements MessageCreateListener {
+    static final Logger LOG = LoggerFactory.getLogger(LucioleListener.class);
 
     @Override
     public void onMessageCreate(DiscordAPI discordAPI, Message message) {

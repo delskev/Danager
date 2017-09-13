@@ -9,5 +9,12 @@ public enum ArgumentType {
     PROPERTY,
     VALUE,
     USER,
-    REASON
+    REASON,
+    DATE,
+    TIME,
+    DESCRIPTION,
+    NAME,
+    DESTINATION,
+    TIER,
+    LEVEL
 }

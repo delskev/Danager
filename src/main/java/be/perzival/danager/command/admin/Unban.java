@@ -4,6 +4,8 @@ import be.perzival.danager.exceptions.command.CommandException;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.sdcf4j.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Unban extends ModerationCommand {
+    static final Logger LOG = LoggerFactory.getLogger(Unban.class);
     /**
      *  unban from server
      * @param api

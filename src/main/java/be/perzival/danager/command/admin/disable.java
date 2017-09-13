@@ -49,6 +49,7 @@ public class Disable extends AbstractCommand {
             EmbedBuilder embed = Responsefactory.getEmbedResponse(this.getClass(), "command "+args[0] + " disabled");
             message.reply(null, embed);
         }
+        LOG.info("command "+args[0] + " disabled from " + message.getChannelReceiver().getServer());
     }
 
 }

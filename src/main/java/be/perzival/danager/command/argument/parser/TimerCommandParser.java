@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
  * Created by Perzival on 04/08/2017.
  */
 @Component
-public class AfkCommandParser implements Parser {
-    static final Logger LOG = LoggerFactory.getLogger(AfkCommandParser.class);
+public class TimerCommandParser implements Parser {
+    static final Logger LOG = LoggerFactory.getLogger(TimerCommandParser.class);
 
 
     @Override
@@ -24,7 +24,10 @@ public class AfkCommandParser implements Parser {
         if (args.length == 0) { // !afk
             return argument;
         }
-        argument.addArgument(ArgumentType.REASON, ParserUtils.concatArgWithSpacer(args, " "));
+        argument.addArgument(ArgumentType.TIME, args[0]);
+        if( args.length > 1) {
+            argument.addArgument(ArgumentType.DESCRIPTION, ParserUtils.concatArgWithSpacer(1, args, " "));
+        }
 
         return argument;
     }

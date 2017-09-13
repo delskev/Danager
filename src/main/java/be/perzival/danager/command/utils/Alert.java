@@ -14,6 +14,8 @@ import de.btobastian.javacord.entities.User;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.permissions.Role;
 import de.btobastian.sdcf4j.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +26,7 @@ import java.util.Optional;
  */
 @Component
 public class Alert extends AbstractCommand {
+    static final Logger LOG = LoggerFactory.getLogger(Alert.class);
 
     @Autowired
     private Parser alertCommandParser;

@@ -28,6 +28,7 @@ public class Strike extends AbstractCommand {
     @Override
     @Command(aliases = {"strike" }, description = "strike ", usage = "strike [user]", privateMessages = false)
     public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
+        LOG.info("Strike player " + "this is not yet Implemented");
         if (args.length == 0 || args.length < 1) { // more than 1 argument
             message.reply("You need to provide more argument !");
         }

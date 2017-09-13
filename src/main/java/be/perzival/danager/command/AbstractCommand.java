@@ -5,6 +5,7 @@ import be.perzival.danager.exceptions.command.CommandException;
 import be.perzival.danager.exceptions.command.CommandHandlerNotAttached;
 import be.perzival.danager.manager.PropertiesManager;
 import de.btobastian.javacord.DiscordAPI;
+import de.btobastian.javacord.entities.Channel;
 import de.btobastian.javacord.entities.Server;
 import de.btobastian.javacord.entities.User;
 import de.btobastian.javacord.entities.message.Message;
@@ -13,6 +14,7 @@ import de.btobastian.sdcf4j.CommandExecutor;
 import de.btobastian.sdcf4j.CommandHandler;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
@@ -94,6 +96,7 @@ public abstract class  AbstractCommand implements CommandExecutor, DanagerComman
     public void setEnabled(boolean enable) {
         this.enabled = enable;
     }
+
     public static Server getServer(Message message) {
         //retrieve the serverId
         return message.getChannelReceiver().getServer();
@@ -123,16 +126,6 @@ public abstract class  AbstractCommand implements CommandExecutor, DanagerComman
         return owner.equals(message.getAuthor()) || Stream.of(adminRoles).anyMatch(adminrole -> roles.contains(adminrole));
     }
 
-    protected String correctAmountOfArgument(String[] args, int min, int max) {
-        if (args.length > max) { // more than max argument
-            return "To many arguments!";
-        }
-        if (args.length == 0 || args.length < min) { // less than min argument
-            return "You need to provide more argument !";
-        }
-        return null;
-    }
-
     /**
      * find a user no matter how you write it : @user | User | USER | UsEr
      * @param users the collection of user where to find the user
@@ -157,5 +150,11 @@ public abstract class  AbstractCommand implements CommandExecutor, DanagerComman
             }
         }
         return userfinded;
+    }
+
+    protected Optional<Channel> findChannelByName(Server server, String channelName) {
+        return server.getChannels()
+                     .stream()
+                     .filter(channel -> channel.getName().equalsIgnoreCase(channelName)).findFirst();
     }
 }

@@ -6,7 +6,8 @@ package be.perzival.danager.configuration;
 public enum PropertiesEnum {
     PREFIX("commands.prefix"),
     ADMIN("role.admin"),
-    LUCIOLE("listener.luciole");
+    LUCIOLE("listener.luciole"),
+    NEWCONNECTION("listener.newconnection");
 
     private String value;
 

@@ -10,6 +10,8 @@ import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.message.embed.EmbedBuilder;
 import de.btobastian.sdcf4j.Command;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,7 @@ import java.util.Date;
  */
 @Component
 public class Info extends AbstractCommand {
+    static final Logger LOG = LoggerFactory.getLogger(Info.class);
 
     @Autowired
     private Parser infoCommandParser;
