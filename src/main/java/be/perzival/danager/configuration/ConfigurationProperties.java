@@ -31,21 +31,6 @@ public class ConfigurationProperties {
         applicationProperties.setProperty(PropertiesEnum.PREFIX.value(), prefix);
     }
 
-    public String[] getAdmin() {
-        return applicationProperties.get(PropertiesEnum.ADMIN.value()).toString().split(",");
-    }
-
-    public void setAdmin(String[] admin) {
-        String result = "";
-        for(int i = 0; i < admin.length; ++i) {
-            result = result.concat(admin[i]);
-            if(!(i < admin.length-1)) {
-                result = result.concat(",");
-            }
-        }
-        applicationProperties.setProperty(PropertiesEnum.ADMIN.value(), result);
-    }
-
     public Boolean getLuciole() {
         return applicationProperties.get(PropertiesEnum.LUCIOLE.value()).toString().equalsIgnoreCase("true");
     }

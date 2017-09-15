@@ -12,7 +12,10 @@ public enum ExceptionsMessages {
     TOOMANYARGUMENTS("Command contains too many arguments !"),
     NOTENOUGHARGUMENTS("Command contains not enough arguments !"),
     //ParserException
-    UNKNOWNCOMMANDPARSER("This parser is unknown: ");
+    UNKNOWNCOMMANDPARSER("This parser is unknown: "),
+    //EventType Exception
+    BADEVENTYPEPROVIDED("You have provided a bad event type: ");
+
 
     private String value;
 

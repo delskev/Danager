@@ -5,6 +5,7 @@ import be.perzival.danager.command.DanagerCommand;
 import be.perzival.danager.command.Responsefactory;
 import be.perzival.danager.exceptions.command.CommandException;
 import de.btobastian.javacord.DiscordAPI;
+import de.btobastian.javacord.entities.Server;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.message.embed.EmbedBuilder;
 import de.btobastian.sdcf4j.Command;
@@ -36,12 +37,13 @@ public class Enable extends AbstractCommand {
     @Override
     @Command(aliases = {"enable" }, description = "enable a command", usage = "enable [command]", privateMessages = false)
     public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
+        Server server = getServer(message);
         if (args.length == 0) { // more than 1 argument
             message.reply("You need to provide more argument !");
             return;
         }
 
-        if(!isadmin(message))return;
+        if(!isadmin(message.getAuthor(), server))return;
 
         DanagerCommand command = commandExecutorssMap.get(args[0]);
         if(command != null) {

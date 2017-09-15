@@ -68,7 +68,6 @@ public class PropertiesManager {
         Properties properties = new Properties();
         try(OutputStream os = new FileOutputStream(fileName)) {
             //prepare all the properties
-            properties.put(PropertiesEnum.ADMIN.value(), "Administrator,moderateur");
             properties.put(PropertiesEnum.PREFIX.value(), "!");
             properties.put(PropertiesEnum.LUCIOLE.value(), "false");
             properties.put(PropertiesEnum.NEWCONNECTION.value(), "true");

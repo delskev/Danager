@@ -3,12 +3,13 @@ package be.perzival.danager.command;
 import be.perzival.danager.exceptions.ExceptionsMessages;
 import be.perzival.danager.exceptions.command.CommandException;
 import be.perzival.danager.exceptions.command.CommandHandlerNotAttached;
-import be.perzival.danager.manager.PropertiesManager;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.Channel;
 import de.btobastian.javacord.entities.Server;
 import de.btobastian.javacord.entities.User;
 import de.btobastian.javacord.entities.message.Message;
+import de.btobastian.javacord.entities.permissions.PermissionState;
+import de.btobastian.javacord.entities.permissions.PermissionType;
 import de.btobastian.javacord.entities.permissions.Role;
 import de.btobastian.sdcf4j.CommandExecutor;
 import de.btobastian.sdcf4j.CommandHandler;
@@ -17,7 +18,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.stream.Stream;
 
 /**
  * Created by Perzival on 30/07/2017.
@@ -104,26 +104,26 @@ public abstract class  AbstractCommand implements CommandExecutor, DanagerComman
 
     /**
      * know if command's author is admin or not
-     * @param message
+     * @param user
+     * @param server
      * @return
      */
-    protected boolean isadmin(Message message) {
+    public static boolean isadmin(User user, Server server) {
         //get roles of the message's server
-        Server server = getServer(message);
-        Collection<Role> roles = message.getAuthor().getRoles(server);
-        String[] adminRoles = PropertiesManager.getInstance().getServerConfig(server).getAdmin();
-        Future<User> futureOwner = getServer(message).getOwner();
+        Collection<Role> roles = user.getRoles(server);
+        Future<User> futureOwner = server.getOwner();
 
         User owner = null;
         try {
             owner = futureOwner.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        } catch (Exception osef) {}
+        for(Role role: roles) {
+            if( role.getPermissions().getState(PermissionType.ADMINISTRATOR).equals(PermissionState.ALLOWED) ||
+                owner.equals(user)) {
+                return true;
+            }
         }
-
-        return owner.equals(message.getAuthor()) || Stream.of(adminRoles).anyMatch(adminrole -> roles.contains(adminrole));
+        return false;
     }
 
     /**

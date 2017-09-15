@@ -30,14 +30,13 @@ public abstract class ModerationCommand extends AbstractCommand {
 
     protected void execute(DiscordAPI api, Message message, String[]args, Moderationtype moderationtype) throws CommandException {
         Argument argument = moderationCommandParser.parse(args);
-
+        Server server = getServer(message);
         if(!argument.hasArgument()) { // more than 1 argument
             message.reply("You need to provide more argument !");
             return;
         }
-        if(!isadmin(message))return;
+        if(!isadmin(message.getAuthor(), server))return;
 
-        Server server = getServer(message);
         Collection<User> members = server.getMembers();
 
         User user  = findUser(members, argument.getArgument(ArgumentType.USER).get());

@@ -5,7 +5,9 @@ import be.perzival.danager.command.Responsefactory;
 import be.perzival.danager.command.argument.Argument;
 import be.perzival.danager.command.argument.ArgumentType;
 import be.perzival.danager.command.argument.parser.Parser;
+import be.perzival.danager.entities.EventEntities;
 import be.perzival.danager.exceptions.command.CommandException;
+import be.perzival.danager.manager.EventManager;
 import com.vdurmont.emoji.EmojiManager;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.Channel;
@@ -44,21 +46,24 @@ public class Event extends AbstractCommand{
     @Command(aliases = {"event"}, description = "create a new event", usage = "event [pve|pvp|farm] [date] [start time] [BZ|YZ|RZ|BZ] [description]")
     public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
         Argument argument = eventCommandParser.parse(args);
+        EventEntities eventEntities = new EventEntities(argument.getArgument(ArgumentType.MODE).get().toUpperCase(),
+                                                        argument.getArgument(ArgumentType.DATE).get() + "-" + argument.getArgument(ArgumentType.TIME).get(),
+                                                        argument.getArgument(ArgumentType.DESTINATION).get(),
+                                                        argument.getArgument(ArgumentType.DESCRIPTION).get());
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("Type: " + argument.getArgument(ArgumentType.MODE).get().toUpperCase() + "\n");
-        builder.append("Date: " + argument.getArgument(ArgumentType.DATE).get() + "-" + argument.getArgument(ArgumentType.TIME).get() + "\n");
-        builder.append("Destination: " + argument.getArgument(ArgumentType.DESTINATION).get() + "\n");
-        builder.append("Description: " + argument.getArgument(ArgumentType.DESCRIPTION).get() + "\n");
+        EmbedBuilder embed = Responsefactory.getEmbedResponse(this.getClass(), eventEntities.toString());
 
-        EmbedBuilder embed = Responsefactory.getEmbedResponse(this.getClass(), builder.toString());
         Optional<Channel> channelReceiver = Optional.empty();
-        if( "PVE".equalsIgnoreCase(argument.getArgument(ArgumentType.MODE).get())) {
-            channelReceiver = findChannelByName(message.getChannelReceiver().getServer(), EVENTPVE) ;
-        }else if( "PVP".equalsIgnoreCase(argument.getArgument(ArgumentType.MODE).get())) {
-            channelReceiver = findChannelByName(message.getChannelReceiver().getServer(), EVENTPVP) ;
-        }else if( "FARM".equalsIgnoreCase(argument.getArgument(ArgumentType.MODE).get())) {
-            channelReceiver = findChannelByName(message.getChannelReceiver().getServer(), EVENTFARM) ;
+        switch(eventEntities.getType()) {
+            case PVP:
+                channelReceiver = findChannelByName(message.getChannelReceiver().getServer(), EVENTPVP) ;
+                break;
+            case PVE:
+                channelReceiver = findChannelByName(message.getChannelReceiver().getServer(), EVENTPVE) ;
+                break;
+            case FARM:
+                channelReceiver = findChannelByName(message.getChannelReceiver().getServer(), EVENTFARM) ;
+                break;
         }
 
         message.delete();
@@ -67,11 +72,12 @@ public class Event extends AbstractCommand{
             Future<Message> fmsg = channelReceiver.get().sendMessage(null, embed);
             try {
                 Message msg = fmsg.get();
-                msg.addUnicodeReaction(EmojiManager.getForAlias(":thumbsup:").getUnicode()).get();
+                EventManager.getInstance().addEvent(msg.getId(), eventEntities);
+                msg.addUnicodeReaction(EmojiManager.getForAlias(EventEntities.PARTICIPATE).getUnicode()).get();
                 Thread.sleep(1000);
-                msg.addUnicodeReaction(EmojiManager.getForAlias(":thumbsdown:").getUnicode()).get();
+                msg.addUnicodeReaction(EmojiManager.getForAlias(EventEntities.DONOTPARTICIPATE).getUnicode()).get();
                 Thread.sleep(1000);
-                msg.addUnicodeReaction(EmojiManager.getForAlias(":raised_hand:").getUnicode()).get();
+                msg.addUnicodeReaction(EmojiManager.getForAlias(EventEntities.MAYBEPARTICIPATE).getUnicode()).get();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {

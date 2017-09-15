@@ -5,14 +5,11 @@ import be.perzival.danager.command.Responsefactory;
 import be.perzival.danager.command.argument.Argument;
 import be.perzival.danager.command.argument.ArgumentType;
 import be.perzival.danager.command.argument.parser.Parser;
-import be.perzival.danager.configuration.ConfigurationProperties;
 import be.perzival.danager.exceptions.command.CommandException;
-import be.perzival.danager.manager.PropertiesManager;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.Server;
 import de.btobastian.javacord.entities.User;
 import de.btobastian.javacord.entities.message.Message;
-import de.btobastian.javacord.entities.permissions.Role;
 import de.btobastian.sdcf4j.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,14 +42,10 @@ public class Alert extends AbstractCommand {
         if(argument.hasArgument()) {
             Optional<String> arg = argument.getArgument(ArgumentType.REASON);
             Server server = getServer(message);
-            ConfigurationProperties config = PropertiesManager.getInstance().getServerConfig(server);
             for(User user: server.getMembers()) {
-                for(Role role: user.getRoles(server)) {
-                    for(String serverAdminRoles: config.getAdmin()) {
-                        if(serverAdminRoles.equals(role.getName())) {
-                            user.sendMessage(null, Responsefactory.getEmbedResponse(Afk.class, arg.get(), user));
-                        }
-                    }
+                if(isadmin(user, server)) {
+                    user.sendMessage(null, Responsefactory.getEmbedResponse(Afk.class, arg.get(), user));
+                    message.delete();
                 }
             }
 

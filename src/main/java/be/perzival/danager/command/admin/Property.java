@@ -9,6 +9,7 @@ import be.perzival.danager.configuration.ConfigurationProperties;
 import be.perzival.danager.exceptions.command.CommandException;
 import be.perzival.danager.manager.PropertiesManager;
 import de.btobastian.javacord.DiscordAPI;
+import de.btobastian.javacord.entities.Server;
 import de.btobastian.javacord.entities.message.Message;
 import de.btobastian.javacord.entities.message.embed.EmbedBuilder;
 import de.btobastian.sdcf4j.Command;
@@ -38,10 +39,11 @@ public class Property extends AbstractCommand {
     @Command(aliases = {"property" }, description = "Shows bot's configuration", usage = "property [set | get]", privateMessages = false)
     public void executeCommand(DiscordAPI api, Message message, String[]args) throws CommandException {
         Argument argument = propertyCommandParser.parse(args);
+        Server server = getServer(message);
+        ConfigurationProperties config = PropertiesManager.getInstance().getServerConfig(server);
 
-        ConfigurationProperties config = PropertiesManager.getInstance().getServerConfig(getServer(message));
 
-        if(!isadmin(message))return;
+        if(!isadmin(message.getAuthor(), server))return;
         EmbedBuilder builder = null;
         if( !argument.hasArgument()) {
             builder = Responsefactory.getEmbedResponse(this.getClass(), config.toString());
@@ -49,14 +51,14 @@ public class Property extends AbstractCommand {
         }else { //want to get or specify a property
             switch (argument.getArgument(ArgumentType.MODE).get()) {
                 case "get":
-                    LOG.info("Set property " + argument.getArgument(ArgumentType.PROPERTY) + "from "+ message.getChannelReceiver().getServer());
+                    LOG.info("Get property " + argument.getArgument(ArgumentType.PROPERTY) + "from "+ message.getChannelReceiver().getServer());
                     builder = Responsefactory.getEmbedResponse(this.getClass(), config.getProperty(argument.getArgument(ArgumentType.PROPERTY).get()));
                     break;
                 case "set":
                     LOG.info("Set property " + argument.getArgument(ArgumentType.PROPERTY) + "from "+ message.getChannelReceiver().getServer());
                     config.setProperty(argument.getArgument(ArgumentType.PROPERTY).get(),
                             argument.getArgument(ArgumentType.VALUE).get());
-                    PropertiesManager.getInstance().persistServerConfig(getServer(message));
+                    PropertiesManager.getInstance().persistServerConfig(server);
                     builder = Responsefactory.getEmbedResponse(this.getClass(), config.getProperty(args[1]));
                     break;
             }

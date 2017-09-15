@@ -1,5 +1,6 @@
 package be.perzival.danager.listener;
 
+import be.perzival.danager.command.AbstractCommand;
 import be.perzival.danager.manager.PropertiesManager;
 import de.btobastian.javacord.DiscordAPI;
 import de.btobastian.javacord.entities.Server;
@@ -11,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.stream.Stream;
 
 /**
  * Created by Perzival on 31/07/2017.
@@ -30,9 +30,8 @@ public class DanagerJoinServerListener implements ServerJoinListener, ServerMemb
         if( PropertiesManager.getInstance().getServerConfig(server).getNewConnection()) {
             for (User member : server.getMembers()) {
                 Collection<Role> roles = member.getRoles(server);
-                String[] adminRoles = PropertiesManager.getInstance().getServerConfig(server).getAdmin();
                 //if user is admin
-                if (Stream.of(adminRoles).anyMatch(adminrole -> roles.contains(adminrole))) {
+                if (AbstractCommand.isadmin(user, server)) {
                     member.sendMessage("User " + user.getName() + " has join your server.");
                 }
             }

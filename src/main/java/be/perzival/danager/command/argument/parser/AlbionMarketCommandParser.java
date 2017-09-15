@@ -37,14 +37,14 @@ public class AlbionMarketCommandParser implements Parser {
             if( tierAndLevel != -1) {
                 argument.addArgument(ArgumentType.LEVEL, args[1].substring(tierAndLevel+1));
             }
-            argument.addArgument(ArgumentType.TIER, "T"+args[1].substring(1, tierAndLevel));
+            argument.addArgument(ArgumentType.TIER, "T"+args[1].substring(1, args[1].length()));
 
         }else {
             int tierAndLevel = args[1].indexOf(".");
             if( tierAndLevel != -1) {
                 argument.addArgument(ArgumentType.LEVEL, args[1].substring(tierAndLevel+1));
             }
-            argument.addArgument(ArgumentType.TIER, "T"+args[1].substring(0, tierAndLevel));
+            argument.addArgument(ArgumentType.TIER, "T"+args[1].substring(0, args[1].length()));
 
         }
 
