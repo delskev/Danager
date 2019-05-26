@@ -7,10 +7,10 @@
         </layout>
     </appender>
 
-    <logger name="be.perzival.danager" level="TRACE"/>
+    <logger name="be.perzival.danager" level="INFO"/>
 
 
-    <root level="debug">
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

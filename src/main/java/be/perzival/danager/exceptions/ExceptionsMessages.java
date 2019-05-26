@@ -8,7 +8,7 @@ public enum ExceptionsMessages {
     //Command exception
     COMMANDHANDLERALREADYATTACHED("The CommandHandler have already been attached !"),
     COMMANDHANDLERNOTATTACHED("The CommandHandler is not attached !"),
-    //Argument exception
+    //argument exception
     TOOMANYARGUMENTS("Command contains too many arguments !"),
     NOTENOUGHARGUMENTS("Command contains not enough arguments !"),
     //ParserException
