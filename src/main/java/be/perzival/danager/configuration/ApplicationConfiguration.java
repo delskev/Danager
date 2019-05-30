@@ -33,37 +33,4 @@ public class ApplicationConfiguration {
         this.environment = environment;
     }
 
-    @PostConstruct
-    public void printProperties() {
-        LOG.info("**** APPLICATION PROPERTIES SOURCES ****");
-
-        Set<String> properties = new TreeSet<>();
-        for (PropertiesPropertySource p : findPropertiesPropertySources()) {
-            LOG.info(p.toString());
-            properties.addAll(Arrays.asList(p.getPropertyNames()));
-        }
-        LOG.info("**** APPLICATION PROPERTIES VALUES ****");
-        print(properties);
-
-    }
-
-    private List<PropertiesPropertySource> findPropertiesPropertySources() {
-        List<PropertiesPropertySource> propertiesPropertySources = new LinkedList<>();
-        for (PropertySource<?> propertySource : environment.getPropertySources()) {
-            if (propertySource instanceof PropertiesPropertySource) {
-                propertiesPropertySources.add((PropertiesPropertySource) propertySource);
-            }
-        }
-        return propertiesPropertySources;
-    }
-
-    private void print(Set<String> properties) {
-        for (String propertyName : properties) {
-            LOG.info("{}={}", propertyName, environment.getProperty(propertyName));
-        }
-    }
-
-
-
-
 }

@@ -1,16 +1,20 @@
-package be.perzival.danager.commands.common;
+package be.perzival.danager.commands.core;
 
+import be.perzival.danager.commands.AbstractDanagerCommand;
+import be.perzival.danager.commands.DanagerCommand;
+import be.perzival.danager.handler.DanagerCommandHandler;
 import de.btobastian.sdcf4j.Command;
-import de.btobastian.sdcf4j.CommandExecutor;
 import de.btobastian.sdcf4j.CommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HelpCommand implements CommandExecutor {
+public class HelpCommand extends AbstractDanagerCommand {
 
     @Autowired
-    private CommandHandler commandHandler;
+    @Lazy
+    private DanagerCommandHandler commandHandler;
 
 
     @Command(aliases = {"help", "commands"}, description = "Shows this page")
@@ -19,9 +23,13 @@ public class HelpCommand implements CommandExecutor {
         builder.append("```xml"); // a xml code block looks fancy
 
         for (CommandHandler.SimpleCommand simpleCommand : commandHandler.getCommands()) {
-            if (!simpleCommand.getCommandAnnotation().showInHelpPage()) {
+
+            //if the command is diasble or don't have help -> return
+            if (!((DanagerCommand)simpleCommand.getExecutor()).isEnabled() ||
+                    !simpleCommand.getCommandAnnotation().showInHelpPage()) {
                 continue; // skip command
             }
+
             builder.append("\n");
             if (!simpleCommand.getCommandAnnotation().requiresMention()) {
                 // the default prefix only works if the command does not require a mention
