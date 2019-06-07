@@ -19,7 +19,8 @@ public final class DeleteMessagesCommand extends AbstractDanagerCommand {
         if(textChannel == null || parameters.length != 1) return ;
 
         LOG.info("Trying to delete {} message(s)", parameters[0]);
-        textChannel.getMessages(Integer.valueOf(parameters[0])).thenAcceptAsync(MessageSet::deleteAll);
+        textChannel.getMessages(Integer.valueOf(parameters[0]))
+                .thenAcceptAsync(MessageSet::deleteAll);
 
         ResponseFactory
                 .getEmbedResponse(ResponseFactory.ResponseType.SUCCESS, "Successfully delete "+ parameters[0] + " message(s")

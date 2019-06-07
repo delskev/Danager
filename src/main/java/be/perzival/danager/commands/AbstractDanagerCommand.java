@@ -25,6 +25,10 @@ public abstract class AbstractDanagerCommand implements DanagerCommand {
         return this.enable;
     }
 
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
+
     @Override
     public void enable() {
         this.enable = true;

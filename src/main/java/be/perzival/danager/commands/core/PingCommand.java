@@ -18,5 +18,4 @@ public class PingCommand extends AbstractDanagerCommand {
         LOG.info("Execute ping command");
         return "Pong!";
     }
-
 }

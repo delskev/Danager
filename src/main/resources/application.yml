@@ -10,7 +10,6 @@ server:
   port: 8080
 
 danager:
-  test: "hello"
   commands:
     prefix: "!"
 
