@@ -6,16 +6,32 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Danager" />
+        <module name="api" />
+        <module name="container" />
+        <module name="Admin" />
+        <module name="core" />
+        <module name="admin" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Danager" target="12" />
+      <module name="admin" target="11" />
+      <module name="Admin" target="11" />
+      <module name="api" target="11" />
+      <module name="commands" target="11" />
+      <module name="container" target="11" />
+      <module name="core" target="11" />
+      <module name="Core" target="11" />
+      <module name="Danager" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="Danager" options="-parameters" />
+      <module name="Core" options="-parameters" />
+      <module name="Danager" options="" />
+      <module name="admin-commands" options="-parameters" />
+      <module name="commands" options="" />
+      <module name="container" options="" />
+      <module name="core" options="" />
     </option>
   </component>
 </project>

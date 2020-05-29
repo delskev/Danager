@@ -1,0 +1,19 @@
+#Spring-boot main properties
+spring:
+  profiles:
+    default: none
+    active: none
+  application:
+    name: Danager
+
+server:
+  port: 8080
+
+danager:
+  commands:
+    prefix: "!"
+
+
+discord:
+  token: "MzQxMTgwNTQ4MDQxMTQ2MzY5.XtEz1g.OHplk5bTWoYg0bFb7eTUFOsUS2w"
+
