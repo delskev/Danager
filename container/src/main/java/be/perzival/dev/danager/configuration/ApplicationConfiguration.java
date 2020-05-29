@@ -1,4 +1,4 @@
-package be.perzival.danager.configuration;
+package be.perzival.dev.danager.configuration;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;

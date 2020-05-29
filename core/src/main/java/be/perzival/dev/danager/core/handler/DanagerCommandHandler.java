@@ -1,4 +1,4 @@
-package be.perzival.danager.handler;
+package be.perzival.dev.danager.core.handler;
 
 import de.btobastian.sdcf4j.CommandExecutor;
 import de.btobastian.sdcf4j.handler.JavacordHandler;

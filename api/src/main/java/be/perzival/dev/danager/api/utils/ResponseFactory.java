@@ -1,37 +1,42 @@
-package be.perzival.danager.utils;
+package be.perzival.dev.danager.api.utils;
 
 
+import be.perzival.dev.danager.api.exceptions.ExceptionMessages;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 
 import java.awt.*;
 
-public class ResponseFactory {
+public interface ResponseFactory {
 
-    public enum CommonResponse {
-        NOTANDADMIN,
-        NOTENABLE
+    enum CommonResponse {
+        NOT_AND_ADMIN,
+        NOT_ENABLE
     }
 
-    public enum ResponseType {
+    enum ResponseType {
         ALERT,
         NORMAL,
         SUCCESS,
         ERROR
     }
 
-    public static final MessageBuilder getEmbedResponse(CommonResponse commonResponse) {
+    static MessageBuilder getEmbedResponse(CommonResponse commonResponse) {
         switch (commonResponse) {
-            case NOTANDADMIN:
+            case NOT_AND_ADMIN:
                 return getEmbedResponse(ResponseType.ALERT, "This command requires admin privillege...");
-            case NOTENABLE:
+            case NOT_ENABLE:
                 return getEmbedResponse(ResponseType.ALERT, "This command is not Enable...");
             default:
                 return getEmbedResponse(ResponseType.ERROR, "Unknown Commands");
         }
     }
 
-    public static final MessageBuilder getEmbedResponse(ResponseType responseType, String message) {
+    static MessageBuilder getEmbedResponse(ResponseType responseType, ExceptionMessages message) {
+        return getEmbedResponse(responseType, message.value());
+    }
+
+    static MessageBuilder getEmbedResponse(ResponseType responseType, String message) {
         EmbedBuilder builder = new EmbedBuilder()
                 .setUrl("https://github.com/delskev/Danager")
                 .setAuthor("Danager", "https://github.com/delskev/Danager", "http://s3.amazonaws.com/cdn.roosterteeth.com/uploads/images/de8ca976-2cf3-4435-8e84-2985dbc04409/md/2220309-1451961825223-Ni.jpeg")
@@ -54,6 +59,4 @@ public class ResponseFactory {
 
         return new MessageBuilder().setEmbed(builder);
     }
-
-
 }

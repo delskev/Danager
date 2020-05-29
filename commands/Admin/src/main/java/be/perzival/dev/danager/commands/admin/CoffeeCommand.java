@@ -1,4 +1,4 @@
-package be.perzival.danager.commands;
+package be.perzival.dev.danager.commands.admin;
 
 
 import de.btobastian.sdcf4j.Command;

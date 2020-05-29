@@ -9,6 +9,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
+    <groupId>be.perzival.dev.danager</groupId>
     <artifactId>container</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -16,12 +17,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>be.perzival.dev</groupId>
+            <groupId>be.perzival.dev.danager.commands</groupId>
             <artifactId>admin</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>be.perzival.dev</groupId>
+            <groupId>be.perzival.dev.danager</groupId>
             <artifactId>core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>

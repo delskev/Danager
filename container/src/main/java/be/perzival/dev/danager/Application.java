@@ -1,7 +1,7 @@
-package be.perzival.danager;
+package be.perzival.dev.danager;
 
 
-import be.perzival.danager.configuration.ApplicationConfiguration;
+import be.perzival.dev.danager.configuration.ApplicationConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 /**
  * Created by Perzival on 30/07/2017.
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "be.perzival.dev.danager.*")
 @EnableConfigurationProperties(ApplicationConfiguration.class)
 public class Application {
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);

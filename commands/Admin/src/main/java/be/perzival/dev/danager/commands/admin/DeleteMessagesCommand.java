@@ -1,6 +1,6 @@
-package be.perzival.danager.commands;
+package be.perzival.dev.danager.commands.admin;
 
-import be.perzival.danager.utils.ResponseFactory;
+import be.perzival.dev.danager.api.utils.ResponseFactory;
 import de.btobastian.sdcf4j.Command;
 import de.btobastian.sdcf4j.CommandExecutor;
 import org.javacord.api.entity.channel.TextChannel;

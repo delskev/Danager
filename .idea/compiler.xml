@@ -6,16 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="core" />
         <module name="api" />
         <module name="container" />
-        <module name="Admin" />
-        <module name="core" />
         <module name="admin" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="admin" target="11" />
-      <module name="Admin" target="11" />
       <module name="api" target="11" />
       <module name="commands" target="11" />
       <module name="container" target="11" />

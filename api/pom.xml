@@ -8,8 +8,7 @@
         <version>2.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-
+    <groupId>be.perzival.dev.danager</groupId>
     <artifactId>api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
