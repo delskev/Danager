@@ -9,6 +9,7 @@
         <module>container</module>
         <module>commands</module>
         <module>api</module>
+        <module>race</module>
     </modules>
 
     <groupId>be.perzival.dev</groupId>

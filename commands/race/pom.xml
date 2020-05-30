@@ -7,11 +7,9 @@
         <artifactId>commands</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
-    <groupId>be.perzival.dev.danager.commands</groupId>
-    <artifactId>admin</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+
+    <artifactId>race</artifactId>
 
 
 </project>

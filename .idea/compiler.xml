@@ -9,6 +9,7 @@
         <module name="core" />
         <module name="api" />
         <module name="container" />
+        <module name="race" />
         <module name="admin" />
       </profile>
     </annotationProcessing>
@@ -19,6 +20,7 @@
       <module name="container" target="11" />
       <module name="core" target="11" />
       <module name="Danager" target="11" />
+      <module name="race" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
