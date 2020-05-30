@@ -1,39 +1,23 @@
-package be.perzival.dev.danager.api.exceptions.command;
+package be.perzival.dev.danager.api.exceptions.command
 
+import be.perzival.dev.danager.api.exceptions.ExceptionMessages
+import be.perzival.dev.danager.api.utils.ResponseType
+import be.perzival.dev.danager.api.utils.createEmbedResponse
+import org.javacord.api.entity.channel.TextChannel
 
 /**
  * Created by Perzival on 30/07/2017.
  */
-
-
-import be.perzival.dev.danager.api.exceptions.ExceptionMessages;
-import be.perzival.dev.danager.api.utils.ResponseFactory;
-import be.perzival.dev.danager.api.utils.ResponseFactory.ResponseType;
-import org.javacord.api.entity.channel.TextChannel;
-
 /**
  * root of the command exception
  */
-public class CommandException extends Exception {
-    public CommandException(TextChannel textChannel, ResponseType responseType, ExceptionMessages exceptionMessages) {
-        ResponseFactory
-                .getEmbedResponse(responseType, exceptionMessages)
-                .send(textChannel);
-    }
-
-    public CommandException(ExceptionMessages message) {
-        super(message.value());
-    }
-
-    public CommandException(String message) {
-        super(message);
-    }
-
-    public CommandException(Throwable cause) {
-        super(cause);
-    }
-
-    public CommandException(String message, Throwable cause) {
-        super(message, cause);
-    }
+open class CommandException(textChannel: TextChannel, responseType: ResponseType, exceptionMessages: ExceptionMessages) : Exception() {
+    init{ createEmbedResponse(responseType, exceptionMessages.toString()).send(textChannel) }
 }
+
+
+class NoUserMentionException(textChannel: TextChannel) :
+        CommandException(textChannel, ResponseType.ALERT, ExceptionMessages.NO_USER_MENTION)
+
+class NotEnougArgumentException(textChannel: TextChannel) :
+        CommandException(textChannel, ResponseType.ALERT, ExceptionMessages.BAD_PARAMETER)

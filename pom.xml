@@ -17,17 +17,22 @@
     <packaging>pom</packaging>
 
     <properties>
-        <junit.version>5.4.2</junit.version>
-        <cglib.version>4.3.2.RELEASE</cglib.version>
         <javacord.version>3.0.5</javacord.version>
         <sdcf4j.version>1.0.10</sdcf4j.version>
-        <logback.version>1.1.3</logback.version>
+        <junit.version>5.4.2</junit.version>
         <cglib.version>3.1</cglib.version>
+        <logback.version>1.1.3</logback.version>
         <mockito-all.version>1.10.19</mockito-all.version>
-        <reflections.version>0.9.11</reflections.version>
         <vavr.version>0.10.2</vavr.version>
         <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
+
+        <!--Project settings-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.3.72</kotlin.version>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <spring-boot-maven-plugin.version>2.2.4.RELEASE</spring-boot-maven-plugin.version>
     </properties>
 
     <repositories>
@@ -40,16 +45,17 @@
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
+
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.vavr</groupId>
-                <artifactId>vavr</artifactId>
+                <artifactId>vavr-kotlin</artifactId>
                 <version>${vavr.version}</version>
             </dependency>
             <!-- JavaCord dependencies-->
@@ -63,20 +69,16 @@
                 <artifactId>javacord-api</artifactId>
                 <version>${javacord.version}</version>
             </dependency>
-            <!-- The core module -->
             <dependency>
                 <groupId>de.btobastian.sdcf4j</groupId>
                 <artifactId>sdcf4j-core</artifactId>
                 <version>${sdcf4j.version}</version>
             </dependency>
-            <!-- The module for your prefered lib-->
             <dependency>
                 <groupId>de.btobastian.sdcf4j</groupId>
-                <!-- Possible artifact ids: sdcf4j-javacord, sdcf4j-jda, sdcf4j-jda3, sdcf4j-discord4j -->
                 <artifactId>sdcf4j-javacord</artifactId>
                 <version>${sdcf4j.version}</version>
             </dependency>
-            <!-- A SLF4J comptible logging framework. I would recommend to use logback -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
@@ -93,14 +95,12 @@
                 <version>${spring.boot.version}</version>
                 <optional>true</optional>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
-            <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine -->
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
@@ -108,57 +108,60 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.reflections</groupId>
-                <artifactId>reflections</artifactId>
-                <version>${reflections.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>cglib</groupId>
                 <artifactId>cglib</artifactId>
                 <version>${cglib.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>${mockito-all.version}</version>
-                <scope>test</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
+
     <build>
+        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
-            <!--            <plugin>-->
-            <!--                <groupId>org.jetbrains.kotlin</groupId>-->
-            <!--                <artifactId>kotlin-maven-plugin</artifactId>-->
-            <!--                <version>${kotlin.version}</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>compile</id>-->
-            <!--                        <goals>-->
-            <!--                            <goal>compile</goal>-->
-            <!--                        </goals>-->
-            <!--                    </execution>-->
-            <!--                    <execution>-->
-            <!--                        <id>test-compile</id>-->
-            <!--                        <goals>-->
-            <!--                            <goal>test-compile</goal>-->
-            <!--                        </goals>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.2.4.RELEASE</version>
+                <version>${spring-boot-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <configuration>
+                    <jvmTarget>${java.version}</jvmTarget>
+                    <javaParameters>true</javaParameters>
+                    <args>
+                        <arg>-Xjsr305=strict</arg>
+                    </args>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <source>src/main/kotlin</source>
+                                <source>target/generated-sources/annotations</source>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <source>src/test/kotlin</source>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

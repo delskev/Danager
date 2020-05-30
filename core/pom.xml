@@ -20,15 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>io.vavr</groupId>
-            <artifactId>vavr</artifactId>
+            <artifactId>vavr-kotlin</artifactId>
         </dependency>
         <dependency>
             <groupId>org.javacord</groupId>
             <artifactId>javacord</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.btobastian.sdcf4j</groupId>
-            <artifactId>sdcf4j-core</artifactId>
         </dependency>
         <dependency>
             <groupId>de.btobastian.sdcf4j</groupId>
@@ -61,11 +57,6 @@
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>${cglib.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
